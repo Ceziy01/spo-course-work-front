@@ -34,7 +34,7 @@ CMD ["nginx", "-g", "daemon off;"]
 # docker build -t storage-system-front .
 
 # Запуск
-# docker run -d -p 3000:80 --name storage-system-front
+# docker run -d -p 3000:80 --name storage-system-front storage-system-front
 
 # Запущенные контейнеры
 #docker ps
