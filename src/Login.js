@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Login.css"
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -16,7 +17,7 @@ function Login() {
       body: formData.toString()
     });
 
-    if (!res.ok) return alert("Login failed");
+    if (!res.ok) return alert(`Login failed \n code: ${res.status}`);
     const data = await res.json();
     localStorage.setItem("token", data.access_token);
     window.location.href = "/";
