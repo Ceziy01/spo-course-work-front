@@ -24,11 +24,13 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username"/>
-      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"/>
-      <button type="submit">Login</button>
-    </form>
+    <div className="login-page">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Имя пользователя"/>
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Пароль"/>
+        <button type="submit">Войти</button>
+      </form>
+    </div>
   );
 }
 

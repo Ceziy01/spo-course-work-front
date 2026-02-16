@@ -1,59 +1,60 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCallback } from "react";
-import "./Login.css"
+import "./Profile.css";
 
 function Profile() {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
-  const logout = useCallback(() => {
-    localStorage.removeItem("token");
-    navigate("/");
-  }, [navigate]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/")
-      return;
-    } 
-
     fetch("http://localhost:8000/auth/users/me", {
-      headers: {"Authorization": `Bearer ${token}`}
-    })
-      .then(res => {
-        if (res.status === 401) {
-          logout();
-          return;
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-      return res.json();
-      })
-      .then(data => setUser(data))
-  }, [logout, navigate]);
+    })
+      .then(res => res.json())
+      .then(setUser)
+      .catch(() => alert("Failed to load profile"));
+  }, []);
 
-  if (!user) return <p>Loading...</p>;
+  const logout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+  if (!user) return <div className="profile-page">Loading...</div>;
+
   return (
-    <form>
-      <h2 style={{ textAlign: "center" }}>Profile</h2>
+    <div className="profile-page">
+      <div className="profile-card">
+        <h2>Профиль</h2>
 
-      <p><strong>Username:</strong> {user.username}</p>
-      <p><strong>Role:</strong> {user.is_admin ? "Administrator" : "User"}</p>
+        <div className="profile-row">
+          <span>Имя пользователя</span>
+          <b>{user.username}</b>
+        </div>
 
-      {user.is_admin && (
-        <button
-          type="button"
-          onClick={() => navigate("/admin")}
-        >
-          Admin Panel
+        <div className="profile-row">
+          <span>Тип аккаунта</span>
+          <b>{user.is_admin ? "Admin" : "User"}</b>
+        </div>
+
+        {user.is_admin && (
+          <button
+            className="admin-btn"
+            onClick={() => (window.location.href = "/admin")}
+          >
+            Админ панель
+          </button>
+        )}
+
+        <button className="logout-btn" onClick={logout}>
+          Выйти
         </button>
-      )}
-
-      <button type="button" onClick={logout}>
-        Logout
-      </button>
-    </form>
+      </div>
+    </div>
   );
+
 }
 
 export default Profile;

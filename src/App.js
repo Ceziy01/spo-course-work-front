@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Profile from "./Profile";
-import AdminPanel from "./AdminPanel";
+import AdminPanel from "./AdminPamel/AdminPanel";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -18,7 +18,7 @@ function App() {
         {token && (
           <>
             <Route path="/" element={<Profile />} />
-            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/*" element={<AdminPanel />} />
             <Route path="*" element={<Navigate to="/" />} />
           </>
         )}
