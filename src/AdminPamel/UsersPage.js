@@ -126,7 +126,7 @@ function UsersPage() {
 
 
               <td>
-                <button type="submit">Добавить</button>
+                <button type="submit" className="primary-btn">Добавить</button>
               </td>
             </tr>
           </tbody>

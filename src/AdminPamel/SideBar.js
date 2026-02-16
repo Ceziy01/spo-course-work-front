@@ -7,7 +7,10 @@ function Sidebar() {
 
       <nav>
         <NavLink to="/admin/users" className="nav-item">
-          пользователи
+          Пользователи
+        </NavLink>
+        <NavLink to="/admin/settings" className="nav-item">
+          Настройки
         </NavLink>
       </nav>
     </div>
