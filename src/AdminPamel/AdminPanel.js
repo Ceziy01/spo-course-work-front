@@ -1,9 +1,20 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "../Auth/AuthContext";
 import Sidebar from "./SideBar";
 import UsersPage from "./UsersPage";
 import "./AdminPanel.css";
 
 function AdminPanel() {
+  const { isAdmin, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (!isAdmin) {
+    return <Navigate to="/"/>;
+  }
+
   return (
     <div className="admin-layout">
       <Sidebar />

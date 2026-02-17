@@ -1,29 +1,42 @@
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import Login from "./Login";
-import Profile from "./Profile";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./Auth/AuthContext";
+import Login from "./Auth/Login";
+import Profile from "./Profile/Profile";
 import AdminPanel from "./AdminPamel/AdminPanel";
+import Navigation from "./Navigation/Navigation";
 
-function App() {
-  const token = localStorage.getItem("token");
+function AppRoutes() {
+  const { isAuthenticated, loading} = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <BrowserRouter>
+    <>
+      <Navigation/>
       <Routes>
-        {!token && (
+        {!isAuthenticated ? (
+          <Route path="*" element={<Login/>}/>
+        ) : (
           <>
-            <Route path="*" element={<Login />} />
+            <Route path="/" element={<Profile/>}/>
+            <Route path="/admin/*" element={<AdminPanel/>}/>
+            <Route path="*" element={<Navigate to="/"/>}/>
           </>
-        )}
-
-        {token && (
-          <>
-            <Route path="/" element={<Profile />} />
-            <Route path="/admin/*" element={<AdminPanel />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </>
-        )}
-
+        )
+      }
       </Routes>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes/>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

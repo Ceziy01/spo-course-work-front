@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config";
+import "./UsersPage.css"
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -24,7 +26,7 @@ function UsersPage() {
   const createUser = async (e) => {
       e.preventDefault();
 
-      const res = await fetch("http://localhost:8000/auth/admin/create-user", {
+      const res = await fetch(`${API_BASE_URL}/auth/admin/create-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +50,7 @@ function UsersPage() {
   const deleteUser = async (id) => {
     if (!window.confirm("Delete user?")) return;
 
-    const res = await fetch(`http://localhost:8000/auth/admin/users/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/auth/admin/users/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` }
     });

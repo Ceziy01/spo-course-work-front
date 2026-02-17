@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 import "./Login.css"
 
 function Login() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -11,7 +16,7 @@ function Login() {
     formData.append("username", username);
     formData.append("password", password);
 
-    const res = await fetch("http://localhost:8000/auth/token", {
+    const res = await fetch(`${API_BASE_URL}/auth/token`, {
       method: "POST",
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: formData.toString()
@@ -19,8 +24,15 @@ function Login() {
 
     if (!res.ok) return alert(`Login failed \n code: ${res.status}`);
     const data = await res.json();
-    localStorage.setItem("token", data.access_token);
-    window.location.href = "/";
+    const userRes = await fetch(`${API_BASE_URL}/auth/users/me`, {
+      headers: { Authorization: `Bearer ${data.access_token}`}
+    });
+
+    if (userRes.ok) {
+      const userData = await userRes.json();
+      login(data.access_token, userData);
+      navigate("/");
+    }
   };
 
   return (

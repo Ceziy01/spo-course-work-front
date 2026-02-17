@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config";
 import "./Profile.css";
 
 function Profile() {
@@ -7,7 +8,7 @@ function Profile() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:8000/auth/users/me", {
+    fetch(`${API_BASE_URL}/auth/users/me`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -16,11 +17,6 @@ function Profile() {
       .then(setUser)
       .catch(() => alert("Failed to load profile"));
   }, []);
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
 
   if (!user) return <div className="profile-page">Loading...</div>;
 
@@ -36,21 +32,8 @@ function Profile() {
 
         <div className="profile-row">
           <span>Тип аккаунта</span>
-          <b>{user.is_admin ? "Admin" : "User"}</b>
+          <b>{user.is_admin ? "Админ" : "Пользователь"}</b>
         </div>
-
-        {user.is_admin && (
-          <button
-            className="admin-btn"
-            onClick={() => (window.location.href = "/admin")}
-          >
-            Админ панель
-          </button>
-        )}
-
-        <button className="logout-btn" onClick={logout}>
-          Выйти
-        </button>
       </div>
     </div>
   );
