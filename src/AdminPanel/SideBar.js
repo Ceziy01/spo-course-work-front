@@ -10,8 +10,8 @@ function Sidebar() {
         <NavLink to="/admin/users" className="nav-item">
           Пользователи
         </NavLink>
-        <NavLink to="/admin/settings" className="nav-item">
-          Настройки
+        <NavLink to="/admin/storage" className="nav-item">
+          Склад
         </NavLink>
       </nav>
     </div>

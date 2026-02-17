@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./Auth/AuthContext";
 import Login from "./Auth/Login";
 import Profile from "./Profile/Profile";
-import AdminPanel from "./AdminPamel/AdminPanel";
+import AdminPanel from "./AdminPanel/AdminPanel";
 import Navigation from "./Navigation/Navigation";
 
 function AppRoutes() {
