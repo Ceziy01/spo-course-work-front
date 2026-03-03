@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config";
+import { getRoleLabel } from "../utils/utils";
 import "./UsersPage.css"
+import { ReactComponent as BinIcon } from "../assets/bin.svg"
+import { ReactComponent as PenIcon } from "../assets/pen.svg"
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState("");
+  const [firstName, setFirstname] = useState("");
+  const [lastName, setLastname] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [role, setRole] = useState("customer");
 
   const token = localStorage.getItem("token");
 
@@ -34,16 +40,22 @@ function UsersPage() {
         },
         body: JSON.stringify({
           username,
+          first_name: firstName,
+          last_name: lastName,
+          email,
           password,
-          is_admin: isAdmin
+          role: role
         })
       });
 
       if (!res.ok) return alert("Failed to create user");
 
       setUsername("");
+      setFirstname("");
+      setLastname("");
+      setEmail("");
       setPassword("");
-      setIsAdmin(false);
+      setRole("customer");
       loadUsers();
     };
 
@@ -68,11 +80,15 @@ function UsersPage() {
         <table className="table">
           <thead>
             <tr>
-              <th style={{ width: 70 }}>ID</th>
-              <th>Имя пользователя</th>
-              <th style={{ width: 140 }}>Пароль</th>
+              <th style={{ width: 30 }}>ID</th>
+              <th>Логин</th>
+              <th>Имя</th>
+              <th>Фамилия</th>
+              <th>Почта</th>
+              <th style={{ width: 80 }}>Пароль</th>
               <th style={{ width: 120 }}>Тип аккаунта</th>
-              <th style={{ width: 120 }}></th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
 
@@ -81,15 +97,19 @@ function UsersPage() {
               <tr key={u.id}>
                 <td>{u.id}</td>
                 <td>{u.username}</td>
+                <td>{u.first_name}</td>
+                <td>{u.last_name}</td>
+                <td>{u.email}</td>
                 <td>{"********"}</td>
-                <td>{u.is_admin ? "Админ" : "Пользователь"}</td>
+                <td>{getRoleLabel(u.role)}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => deleteUser(u.id)}
-                  >
-                    Удалить
+                  <button className="delete-icon-btn" onClick={() => deleteUser(u.id)}>
+                    <BinIcon />
+                  </button>
+                </td>
+                <td>
+                  <button className="edit-icon-btn" onClick={() => deleteUser(u.id)}>
+                    <PenIcon />
                   </button>
                 </td>
               </tr>
@@ -100,9 +120,33 @@ function UsersPage() {
 
               <td>
                 <input
-                  placeholder="Имя пользователя"
+                  placeholder="Логин"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
+                />
+              </td>
+
+              <td>
+                <input
+                  placeholder="Имя"
+                  value={firstName}
+                  onChange={e => setFirstname(e.target.value)}
+                />
+              </td>
+
+              <td>
+                <input
+                  placeholder="Фамилия"
+                  value={lastName}
+                  onChange={e => setLastname(e.target.value)}
+                />
+              </td>
+
+              <td>
+                <input
+                  placeholder="Почта"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </td>
 
@@ -116,14 +160,21 @@ function UsersPage() {
               </td>
 
               <td>
-                <label className="role-checkbox">
-                    <input
-                        type="checkbox"
-                        checked={isAdmin}
-                        onChange={e => setIsAdmin(e.target.checked)}
-                    />
-                    <span>Админ</span>
-                </label>
+                <select
+                  name="role"
+                  value={role}
+                  onChange={e => setRole(e.target.value)}
+                  className="table-select"
+                >
+                  <option value="customer">Клиент</option>
+                  <option value="admin">Администратор</option>
+                  <option value="management">Руководство</option>
+                  <option value="sales_manager">Менеджер по продажам</option>
+                  <option value="purchasing_manager">Менеджер по закупкам</option>
+                  <option value="warehouse_keeper">Кладовщик</option>
+                  <option value="accountant">Бухгалтер</option>
+                  <option value="supplier">Поставщик</option>
+                </select>
             </td>
 
 

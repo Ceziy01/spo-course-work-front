@@ -15,6 +15,9 @@ function Login() {
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password);
+    formData.append("first_name", password);
+    formData.append("last_name", password);
+    formData.append("email", password);
 
     const res = await fetch(`${API_BASE_URL}/auth/token`, {
       method: "POST",

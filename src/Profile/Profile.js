@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config";
 import "./Profile.css";
+import { getRoleLabel } from "../utils/utils";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -26,13 +27,28 @@ function Profile() {
         <h2>Профиль</h2>
 
         <div className="profile-row">
-          <span>Имя пользователя</span>
+          <span>Логин</span>
           <b>{user.username}</b>
         </div>
 
         <div className="profile-row">
+          <span>Имя</span>
+          <b>{user.first_name}</b>
+        </div>
+
+        <div className="profile-row">
+          <span>Фамилия</span>
+          <b>{user.last_name}</b>
+        </div>
+
+        <div className="profile-row">
+          <span>Почта</span>
+          <b>{user.email}</b>
+        </div>
+
+        <div className="profile-row">
           <span>Тип аккаунта</span>
-          <b>{user.is_admin ? "Админ" : "Пользователь"}</b>
+          <b>{getRoleLabel(user.role)}</b>
         </div>
       </div>
     </div>

@@ -61,16 +61,50 @@
   background: #111;
 }
 
-.table button:hover {
-  opacity: 0.85;
+.delete-icon-btn svg {
+  width: 24px;
+  height: 2
 }
 
-.delete-btn {
+.delete-icon-btn {
+  width: 38px;
+  height: 38px;
   background: #e54848;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.15s ease;
 }
 
-.delete-btn:hover {
-  background: #c93c3c;
+.delete-icon-btn:hover {
+  background: #f75c5c;
+}
+
+.delete-icon-btn svg {
+  width: 24px;
+  height: 2
+}
+
+.edit-icon-btn {
+  width: 38px;
+  height: 38px;
+  background: #d0d0d0;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.15s ease;
+}
+
+.edit-icon-btn:hover {
+  background: #e6e5e5;
 }
 
 .role-checkbox {
@@ -85,4 +119,31 @@
   width: 14px;
   height: 14px;
   cursor: pointer;
+}
+
+.table-select {
+  width: 100%;
+  height: 34px;
+  padding: 0 34px 0 10px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  font-size: 13px;
+  background: white;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.table-select:focus {
+  border-color: #111;
+}
+
+.table-select:hover {
+  border-color: #999;
 }
