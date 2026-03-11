@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
-import "./Login.css"
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -15,9 +15,6 @@ function Login() {
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password);
-    formData.append("first_name", password);
-    formData.append("last_name", password);
-    formData.append("email", password);
 
     const res = await fetch(`${API_BASE_URL}/auth/token`, {
       method: "POST",
@@ -34,7 +31,7 @@ function Login() {
     if (userRes.ok) {
       const userData = await userRes.json();
       login(data.access_token, userData);
-      navigate("/");
+      navigate("/info");
     }
   };
 

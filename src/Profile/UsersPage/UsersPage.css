@@ -41,6 +41,7 @@
   font-size: 13px;
   outline: none;
   background: white;
+  box-sizing: border-box;
 }
 
 .table input:focus {
@@ -48,63 +49,123 @@
 }
 
 .table button {
-  height: 32px;
-  padding: 0 12px;
+  height: 38px;
+  padding: 0;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 13px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
 }
 
 .primary-btn {
   background: #111;
+  padding: 0 16px;
+  min-width: 80px;
 }
 
-.delete-icon-btn svg {
-  width: 24px;
-  height: 2
+.primary-btn:hover {
+  opacity: 0.85;
 }
 
-.delete-icon-btn {
-  width: 38px;
+/* Стили для кнопок сохранения и отмены */
+.save-btn {
+  background: #111;
+  padding: 0 16px;
+  min-width: 90px;
   height: 38px;
-  background: #e54848;
   border: none;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   color: white;
+  font-size: 13px;
+  cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.delete-icon-btn:hover {
+.save-btn:hover {
+  opacity: 0.85;
+}
+
+.cancel-btn {
+  background: #e54848;
+  padding: 0 16px;
+  min-width: 90px;
+  height: 38px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cancel-btn:hover {
   background: #f75c5c;
 }
 
-.delete-icon-btn svg {
-  width: 24px;
-  height: 2
-}
-
-.edit-icon-btn {
+/* Унифицированные стили для иконок */
+.action-btn {
   width: 38px;
   height: 38px;
-  background: #d0d0d0;
   border: none;
   border-radius: 8px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: white;
   transition: all 0.15s ease;
+  margin: 0 2px;
 }
 
-.edit-icon-btn:hover {
+.action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.action-btn.delete-btn {
+  background: #e54848;
+}
+
+.action-btn.delete-btn:hover {
+  background: #f75c5c;
+}
+
+.action-btn.edit-btn {
+  background: #d0d0d0;
+}
+
+.action-btn.edit-btn:hover {
   background: #e6e5e5;
+}
+
+.action-btn.reset-btn {
+  background: #f0b400;
+}
+
+.action-btn.reset-btn:hover {
+  background: #ffc107;
+}
+
+/* Контейнер для кнопок действий */
+.actions-container {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Стили для строки редактирования */
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .role-checkbox {
@@ -138,6 +199,7 @@
   background-repeat: no-repeat;
   background-position: right 8px center;
   background-size: 16px;
+  box-sizing: border-box;
 }
 
 .table-select:focus {

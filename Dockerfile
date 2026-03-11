@@ -2,22 +2,20 @@ FROM node:24.11.1-alpine AS build
 
 WORKDIR /storage-system-front
 
-COPY package*.json ./
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
+COPY package*.json ./
 RUN npm ci
 
 COPY . .
-
 RUN npm run build
 
 FROM nginx:alpine
-
 COPY --from=build /storage-system-front/build /usr/share/nginx/html
-
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]
 
 # Билд
