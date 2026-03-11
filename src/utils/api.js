@@ -15,9 +15,7 @@ export async function fetchWithAuth(endpoint, options = {}) {
   });
 
   if (response.status === 401) {
-    // Токен истек или недействителен
     localStorage.removeItem("token");
-    // Сообщаем всему приложению, что нужно выйти
     window.dispatchEvent(new CustomEvent("unauthorized"));
     throw new Error("Session expired");
   }

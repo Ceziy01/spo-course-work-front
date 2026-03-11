@@ -4,7 +4,10 @@ import "./Sidebar.css";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const { isAdmin, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
+  
+  const canViewInventory = user && 
+    !["customer"].includes(user.role);
 
   const handleLogout = () => {
     logout();
@@ -34,6 +37,36 @@ function Sidebar() {
           >
             Управление пользователями
           </NavLink>
+        )}
+        {canViewInventory && (
+          <>
+            <NavLink 
+              to="/items" 
+              className={({ isActive }) => 
+                `profile-nav-item ${isActive ? "active" : ""}`
+              }
+            >
+              Товары
+            </NavLink>
+
+            <NavLink 
+              to="/warehouses" 
+              className={({ isActive }) => 
+                `profile-nav-item ${isActive ? "active" : ""}`
+              }
+            >
+              Склады
+            </NavLink>
+
+            <NavLink 
+              to="/categories" 
+              className={({ isActive }) => 
+                `profile-nav-item ${isActive ? "active" : ""}`
+              }
+            >
+              Категории
+            </NavLink>
+          </>
         )}
       </nav>
 

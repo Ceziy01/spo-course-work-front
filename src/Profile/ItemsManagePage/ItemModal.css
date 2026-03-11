@@ -1,0 +1,39 @@
+@import "../UsersPage/ResetPasswordModal.css";
+
+.item-modal {
+  max-width: 600px;
+  width: 90%;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+}
+
+.form-row textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.modal-actions {
+  margin-top: 20px;
+}

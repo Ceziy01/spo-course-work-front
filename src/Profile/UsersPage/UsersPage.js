@@ -164,7 +164,6 @@ function UsersPage() {
       />
 
       <form onSubmit={createUser}>
-        {/* таблица — без изменений, только кнопки уже имеют type="button" */}
         <table className="table">
           <thead>
             <tr>
