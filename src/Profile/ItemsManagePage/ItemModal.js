@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../../utils/api";
+import { API_BASE_URL } from "../../config";
 import "./ItemModal.css";
 
 function ItemModal({ item, onClose, onSave }) {
@@ -14,7 +15,8 @@ function ItemModal({ item, onClose, onSave }) {
     shelf_life_days: "",
     price: 0,
     category_id: "",
-    warehouse_id: ""
+    warehouse_id: "",
+    image_url: null
   });
 
   const [categories, setCategories] = useState([]);
@@ -44,7 +46,8 @@ function ItemModal({ item, onClose, onSave }) {
         shelf_life_days: item.shelf_life_days ?? "",
         price: item.price || 0,
         category_id: item.category_id || "",
-        warehouse_id: item.warehouse_id || ""
+        warehouse_id: item.warehouse_id || "",
+        image_url: item.image_url || null
       });
     }
   }, [item]);
@@ -57,18 +60,44 @@ function ItemModal({ item, onClose, onSave }) {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.name.trim() || !form.article.trim() || !form.category_id || !form.warehouse_id) {
-      alert("Заполните обязательные поля: название, артикул, категория, склад");
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`${API_BASE_URL}/items/upload-image`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}` // 🔥 вручную
+      },
+      body: formData
+    });
+
+    if (!res.ok) {
+      alert("Ошибка загрузки картинки");
       return;
     }
-    if (form.price < 0 || form.quantity < 0) {
-      alert("Цена и количество не могут быть отрицательными");
+
+    const data = await res.json();
+
+    setForm(prev => ({
+      ...prev,
+      image_url: data.image_url
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!form.name.trim() || !form.article.trim() || !form.category_id || !form.warehouse_id) {
+      alert("Заполните обязательные поля");
       return;
     }
 
     setLoading(true);
+
     const url = isEditing ? `/items/${item.id}` : "/items";
     const method = isEditing ? "PATCH" : "POST";
 
@@ -81,15 +110,20 @@ function ItemModal({ item, onClose, onSave }) {
 
     const res = await fetchWithAuth(url, {
       method,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(data)
     });
 
     setLoading(false);
+
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка сохранения");
+      alert(error.detail || "Ошибка");
       return;
     }
+
     onSave();
   };
 
@@ -97,106 +131,54 @@ function ItemModal({ item, onClose, onSave }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content item-modal" onClick={e => e.stopPropagation()}>
         <h3>{isEditing ? "Редактировать товар" : "Добавить товар"}</h3>
+
         <form onSubmit={handleSubmit}>
           <div className="form-row">
-            <input
-              name="article"
-              placeholder="Артикул *"
-              value={form.article}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="name"
-              placeholder="Название *"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
+            <input name="article" placeholder="Артикул *" value={form.article} onChange={handleChange} required />
+            <input name="name" placeholder="Название *" value={form.name} onChange={handleChange} required />
           </div>
 
           <div className="form-row">
-            <textarea
-              name="description"
-              placeholder="Описание"
-              value={form.description}
-              onChange={handleChange}
-              rows="3"
-            />
+            <textarea name="description" placeholder="Описание" value={form.description} onChange={handleChange} />
           </div>
 
           <div className="form-row">
-            <select
-              name="category_id"
-              value={form.category_id}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Выберите категорию *</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
+            <select name="category_id" value={form.category_id} onChange={handleChange} required>
+              <option value="">Категория *</option>
+              {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
 
-            <select
-              name="warehouse_id"
-              value={form.warehouse_id}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Выберите склад *</option>
-              {warehouses.map(wh => (
-                <option key={wh.id} value={wh.id}>{wh.name}</option>
-              ))}
+            <select name="warehouse_id" value={form.warehouse_id} onChange={handleChange} required>
+              <option value="">Склад *</option>
+              {warehouses.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
             </select>
           </div>
 
           <div className="form-row">
-            <input
-              type="number"
-              name="quantity"
-              placeholder="Количество *"
-              value={form.quantity}
-              onChange={handleChange}
-              min="0"
-              step="any"
-              required
-            />
-            <input
-              name="unit"
-              placeholder="Ед. измерения *"
-              value={form.unit}
-              onChange={handleChange}
-              required
-            />
+            <input type="number" name="quantity" value={form.quantity} onChange={handleChange} />
+            <input name="unit" value={form.unit} onChange={handleChange} />
           </div>
 
           <div className="form-row">
-            <input
-              type="number"
-              name="price"
-              placeholder="Цена за ед. *"
-              value={form.price}
-              onChange={handleChange}
-              min="0"
-              step="any"
-              required
-            />
-            <input
-              type="number"
-              name="shelf_life_days"
-              placeholder="Срок хранения (дней), пусто = бессрочно"
-              value={form.shelf_life_days}
-              onChange={handleChange}
-              min="1"
-            />
+            <input type="number" name="price" value={form.price} onChange={handleChange} />
+            <input type="number" name="shelf_life_days" value={form.shelf_life_days} onChange={handleChange} />
           </div>
+
+          <input type="file" onChange={handleFileUpload} />
+
+          {form.image_url && (
+            <div style={{ marginTop: "10px" }}>
+              <img
+                src={`${API_BASE_URL}${form.image_url}`}
+                alt=""
+                style={{ maxWidth: "150px", borderRadius: "6px" }}
+              />
+            </div>
+          )}
 
           <div className="modal-actions">
-            <button type="button" className="modal-btn secondary" onClick={onClose} disabled={loading}>
-              Отмена
-            </button>
-            <button type="submit" className="modal-btn primary" disabled={loading}>
+            <button type="button" onClick={onClose}>Отмена</button>
+            <button type="submit" disabled={loading}>
               {loading ? "Сохранение..." : "Сохранить"}
             </button>
           </div>

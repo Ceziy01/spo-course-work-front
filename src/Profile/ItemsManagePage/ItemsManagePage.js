@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
+import { API_BASE_URL } from "../../config";
 import ItemModal from "./ItemModal";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
@@ -14,6 +15,9 @@ function ItemsManagePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const loadItems = async () => {
     const res = await fetchWithAuth("/items");
     if (!res.ok) return alert("Не удалось загрузить товары");
@@ -26,12 +30,15 @@ function ItemsManagePage() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Удалить товар?")) return;
+
     const res = await fetchWithAuth(`/items/${id}`, { method: "DELETE" });
+
     if (!res.ok) {
       const error = await res.json();
       alert(error.detail || "Ошибка удаления");
       return;
     }
+
     loadItems();
   };
 
@@ -65,7 +72,9 @@ function ItemsManagePage() {
       <div className="items-header">
         <h2 className="page-title">Товары</h2>
         {canEdit && (
-          <button className="primary-btn" onClick={openCreateModal}>Добавить товар</button>
+          <button className="primary-btn" onClick={openCreateModal}>
+            Добавить товар
+          </button>
         )}
       </div>
 
@@ -84,6 +93,7 @@ function ItemsManagePage() {
             {canEdit && <th>Действия</th>}
           </tr>
         </thead>
+
         <tbody>
           {items.map(item => (
             <tr key={item.id}>
@@ -96,20 +106,50 @@ function ItemsManagePage() {
               <td>{item.price} ₽</td>
               <td>{item.warehouse_name || "—"}</td>
               <td>{formatShelfLife(item.shelf_life_days)}</td>
+
               {canEdit && (
                 <td>
                   <div className="actions-container">
-                    <button type="button" className="action-btn delete-btn" onClick={() => handleDelete(item.id)} title="Удалить">
+
+                    {/* 👁 ПРОСМОТР */}
+                    {item.image_url && (
+                      <button
+                        type="button"
+                        className="action-btn"
+                        title="Просмотр"
+                        onClick={() => {
+                          setSelectedImage(item.image_url);
+                          setImageModalOpen(true);
+                        }}
+                      >
+                        👁
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      className="action-btn delete-btn"
+                      onClick={() => handleDelete(item.id)}
+                      title="Удалить"
+                    >
                       <BinIcon />
                     </button>
-                    <button type="button" className="action-btn edit-btn" onClick={() => openEditModal(item)} title="Редактировать">
+
+                    <button
+                      type="button"
+                      className="action-btn edit-btn"
+                      onClick={() => openEditModal(item)}
+                      title="Редактировать"
+                    >
                       <PenIcon />
                     </button>
+
                   </div>
                 </td>
               )}
             </tr>
           ))}
+
           {items.length === 0 && (
             <tr>
               <td colSpan={canEdit ? 10 : 9} style={{ textAlign: "center", padding: "30px" }}>
@@ -120,12 +160,31 @@ function ItemsManagePage() {
         </tbody>
       </table>
 
+      {/* 🔥 модалка товара */}
       {modalOpen && (
         <ItemModal
           item={editingItem}
           onClose={closeModal}
           onSave={handleSave}
         />
+      )}
+
+      {/* 🔥 модалка картинки */}
+      {imageModalOpen && (
+        <div
+          className="image-modal-overlay"
+          onClick={() => setImageModalOpen(false)}
+        >
+          <div
+            className="image-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={`${API_BASE_URL}${selectedImage}`}
+              alt=""
+            />
+          </div>
+        </div>
       )}
     </div>
   );

@@ -16,7 +16,7 @@ function Sidebar() {
 
   return (
     <div className="profile-sidebar">
-      <h2>Мой профиль</h2>
+      <h2>Профиль</h2>
       
       <nav className="profile-nav">
         <NavLink 
