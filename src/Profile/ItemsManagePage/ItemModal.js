@@ -178,7 +178,7 @@ function ItemModal({ item, onClose, onSave }) {
 
           <div className="modal-actions">
             <button type="button" onClick={onClose}>Отмена</button>
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="primary-btn" disabled={loading}>
               {loading ? "Сохранение..." : "Сохранить"}
             </button>
           </div>

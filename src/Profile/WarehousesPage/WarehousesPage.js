@@ -90,7 +90,7 @@ function WarehousesPage() {
   };
 
   return (
-    <div className="users-container">
+    <div className="container">
       <h2 className="page-title">Склады</h2>
 
       <table className="table">

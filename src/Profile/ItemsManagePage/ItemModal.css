@@ -58,3 +58,7 @@ textarea {
   cursor: pointer;
   transition: 0.2s;
 }
+
+.primary-btn {
+  background: #111;
+}

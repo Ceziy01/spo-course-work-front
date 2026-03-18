@@ -153,7 +153,7 @@ function UsersPage() {
   };
 
   return (
-    <div className="users-container">
+    <div className="container">
       <h2 className="page-title">Пользователи</h2>
 
       <ResetPasswordModal

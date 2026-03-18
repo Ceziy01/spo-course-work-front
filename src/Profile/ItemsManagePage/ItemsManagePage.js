@@ -68,7 +68,7 @@ function ItemsManagePage() {
   };
 
   return (
-    <div className="users-container">
+    <div className="container">
       <div className="items-header">
         <h2 className="page-title">Товары</h2>
         {canEdit && (
@@ -110,8 +110,6 @@ function ItemsManagePage() {
               {canEdit && (
                 <td>
                   <div className="actions-container">
-
-                    {/* 👁 ПРОСМОТР */}
                     {item.image_url && (
                       <button
                         type="button"
@@ -160,7 +158,6 @@ function ItemsManagePage() {
         </tbody>
       </table>
 
-      {/* 🔥 модалка товара */}
       {modalOpen && (
         <ItemModal
           item={editingItem}
@@ -169,7 +166,6 @@ function ItemsManagePage() {
         />
       )}
 
-      {/* 🔥 модалка картинки */}
       {imageModalOpen && (
         <div
           className="image-modal-overlay"

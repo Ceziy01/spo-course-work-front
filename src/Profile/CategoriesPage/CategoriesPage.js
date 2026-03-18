@@ -93,7 +93,7 @@ function CategoriesPage() {
   };
 
   return (
-    <div className="users-container">
+    <div className="container">
       <h2 className="page-title">Категории</h2>
 
       <table className="table">
