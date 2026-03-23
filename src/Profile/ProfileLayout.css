@@ -7,13 +7,13 @@
 .profile-content {
   flex: 1;
   padding: 32px 36px;
-  overflow-y: auto;
+  overflow: auto;
 }
 
-.users-container {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-
+.profile-info-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  margin-top: 20px; 
+  }

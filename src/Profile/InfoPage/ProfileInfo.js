@@ -23,33 +23,30 @@ function ProfileInfo() {
   if (!user) return <div className="loading">Загрузка...</div>;
 
   return (
-    <div className="profile-info-container">
+    <div>
       <h2 className="page-title">Информация об аккаунте</h2>
-      
-      <div className="profile-info-card">
-        <div className="profile-info-row">
-          <span className="profile-info-label">Логин</span>
-          <span className="profile-info-value">{user.username}</span>
-        </div>
-
-        <div className="profile-info-row">
-          <span className="profile-info-label">Имя</span>
-          <span className="profile-info-value">{user.first_name || "—"}</span>
-        </div>
-
-        <div className="profile-info-row">
-          <span className="profile-info-label">Фамилия</span>
-          <span className="profile-info-value">{user.last_name || "—"}</span>
-        </div>
-
-        <div className="profile-info-row">
-          <span className="profile-info-label">Email</span>
-          <span className="profile-info-value">{user.email || "—"}</span>
-        </div>
-
-        <div className="profile-info-row">
-          <span className="profile-info-label">Тип аккаунта</span>
-          <span className="profile-info-value role-badge">{getRoleLabel(user.role)}</span>
+      <div className="profile-info-container">
+        <div className="profile-info-card">
+          <div className="profile-info-row">
+            <span className="profile-info-label">Логин</span>
+            <span className="profile-info-value">{user.username}</span>
+          </div>
+          <div className="profile-info-row">
+            <span className="profile-info-label">Имя</span>
+            <span className="profile-info-value">{user.first_name || "—"}</span>
+          </div>
+          <div className="profile-info-row">
+            <span className="profile-info-label">Фамилия</span>
+            <span className="profile-info-value">{user.last_name || "—"}</span>
+          </div>
+          <div className="profile-info-row">
+            <span className="profile-info-label">Email</span>
+            <span className="profile-info-value">{user.email || "—"}</span>
+          </div>
+          <div className="profile-info-row">
+            <span className="profile-info-label">Тип аккаунта</span>
+            <span className="profile-info-value role-badge">{getRoleLabel(user.role)}</span>
+          </div>
         </div>
       </div>
     </div>

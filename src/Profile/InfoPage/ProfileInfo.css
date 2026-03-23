@@ -1,13 +1,9 @@
-.page-title {
-  margin-bottom: 24px;
-  font-size: 24px;
-  color: #111;
-}
+@import "../../styles/shared.css";
 
-.loading {
-  padding: 40px;
-  text-align: center;
-  color: #666;
+.profile-info-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .profile-info-card {
@@ -16,6 +12,7 @@
   padding: 24px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   max-width: 500px;
+  width: 100%;
 }
 
 .profile-info-row {

@@ -8,7 +8,6 @@ function Sidebar() {
   
   const canViewInventory = user && !["customer"].includes(user.role);
   const canManageItems = user && (user.role === 'admin' || user.role === 'warehouse_keeper');
-  const canViewCatalog = user && !canManageItems;
   const isCustomer = user?.role === "customer";
 
   const handleLogout = () => {

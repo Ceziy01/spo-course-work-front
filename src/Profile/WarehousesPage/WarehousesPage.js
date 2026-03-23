@@ -3,7 +3,7 @@ import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
-import "../UsersPage/UsersPage.css";
+import "./WarehousesPage.css";
 
 function WarehousesPage() {
   const { user } = useAuth();
@@ -90,7 +90,7 @@ function WarehousesPage() {
   };
 
   return (
-    <div className="container">
+    <div className="container warehouses-page">
       <h2 className="page-title">Склады</h2>
 
       <table className="table">

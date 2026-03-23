@@ -1,61 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCart } from "../../hooks/useCart";
 import { fetchWithAuth } from "../../utils/api";
 import "./CartPage.css";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
-import { API_BASE_URL } from "../../config";
 
 function CartPage() {
-  const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState({});
-
-  useEffect(() => {
-    loadCart();
-  }, []);
-
-  const loadCart = async () => {
-    setLoading(true);
-    const res = await fetchWithAuth("/cart");
-    if (res.ok) {
-      setCart(await res.json());
-    } else {
-      alert("Ошибка загрузки корзины");
-    }
-    setLoading(false);
-  };
-
-  const updateQuantity = async (itemId, newQuantity) => {
-    if (newQuantity < 1) {
-      await removeItem(itemId);
-      return;
-    }
-    setUpdating({ ...updating, [itemId]: true });
-    const res = await fetchWithAuth(`/cart/items/${itemId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ quantity: newQuantity })
-    });
-    setUpdating({ ...updating, [itemId]: false });
-    if (res.ok) {
-      loadCart();
-    } else if (res.status === 204) {
-      loadCart();
-    } else {
-      const error = await res.json();
-      alert(error.detail || "Ошибка обновления");
-    }
-  };
-
-  const removeItem = async (itemId) => {
-    setUpdating({ ...updating, [itemId]: true });
-    const res = await fetchWithAuth(`/cart/items/${itemId}`, { method: "DELETE" });
-    setUpdating({ ...updating, [itemId]: false });
-    if (res.ok) {
-      loadCart();
-    } else {
-      const error = await res.json();
-      alert(error.detail || "Ошибка удаления");
-    }
-  };
+  const { cart, loading, updating, updateQuantity, removeItem, loadCart } = useCart();
 
   const checkout = async () => {
     if (!window.confirm("Оформить заказ? Корзина будет очищена.")) return;

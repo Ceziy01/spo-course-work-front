@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../../utils/api";
 import { getRoleLabel } from "../../utils/utils";
-import "./UsersPage.css";
+import "../../styles/shared.css";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
 import { ReactComponent as LockIcon } from "../../assets/lock.svg";

@@ -5,6 +5,7 @@ import { API_BASE_URL } from "../../config";
 import ItemModal from "./ItemModal";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
+import { ReactComponent as EyeIcon } from "../../assets/eye.svg";
 import "./ItemsManagePage.css";
 
 function ItemsManagePage() {
@@ -150,12 +151,12 @@ function ItemsManagePage() {
                     {item.image_url && (
                       <button
                         type="button"
-                        className="action-btn"
+                        className="action-btn see-btn"
                         title="Просмотр"
                         onClick={() => {
                           setSelectedImage(item.image_url);
                           setImageModalOpen(true);
-                        }}>👁</button>
+                        }}><EyeIcon/></button>
                     )}
 
                     <button
