@@ -1,0 +1,131 @@
+.cart-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cart-container h2 {
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 500;
+  color: #1e1e2f;
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 24px;
+}
+
+.cart-table th,
+.cart-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.cart-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.cart-table td {
+  font-size: 14px;
+  color: #444;
+}
+
+.cart-table td:first-child,
+.cart-table th:first-child {
+  padding-left: 24px;
+}
+
+.cart-table td:last-child,
+.cart-table th:last-child {
+  padding-right: 24px;
+}
+
+.cart-table button {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 0 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.cart-table button:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #aaa;
+}
+
+.cart-table button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-btn {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.15s ease;
+  margin: 0 2px;
+}
+
+.action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.action-btn.delete-btn {
+  background: #e54848;
+}
+
+.action-btn.delete-btn:hover {
+  background: #f75c5c;
+}
+
+.cart-total {
+  text-align: right;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 16px 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 24px;
+}
+
+.checkout-btn {
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  max-width: 300px;
+  display: block;
+  margin: 0 auto;
+}
+
+.checkout-btn:hover {
+  background: #333;
+}

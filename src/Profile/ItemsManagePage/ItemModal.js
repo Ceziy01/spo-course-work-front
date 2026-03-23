@@ -70,7 +70,7 @@ function ItemModal({ item, onClose, onSave }) {
     const res = await fetch(`${API_BASE_URL}/items/upload-image`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}` // 🔥 вручную
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       },
       body: formData
     });

@@ -6,8 +6,9 @@ function Sidebar() {
   const navigate = useNavigate();
   const { user, isAdmin, logout } = useAuth();
   
-  const canViewInventory = user && 
-    !["customer"].includes(user.role);
+  const canViewInventory = user && !["customer"].includes(user.role);
+  const canManageItems = user && (user.role === 'admin' || user.role === 'warehouse_keeper');
+  const canViewCatalog = user && !canManageItems;
 
   const handleLogout = () => {
     logout();
@@ -21,9 +22,7 @@ function Sidebar() {
       <nav className="profile-nav">
         <NavLink 
           to="/info" 
-          className={({ isActive }) => 
-            `profile-nav-item ${isActive ? "active" : ""}`
-          }
+          className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
         >
           Информация об аккаунте
         </NavLink>
@@ -31,38 +30,41 @@ function Sidebar() {
         {isAdmin && (
           <NavLink 
             to="/users" 
-            className={({ isActive }) => 
-              `profile-nav-item ${isActive ? "active" : ""}`
-            }
-          >
-            Управление пользователями
-          </NavLink>
+            className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+          >Управление пользователями</NavLink>
+        )}
+        {canViewCatalog && (
+          <>
+            <NavLink 
+              to="/catalog"
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+              >Каталог</NavLink>
+
+            <NavLink 
+              to="/cart"
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+            >Корзина</NavLink>
+          </>
         )}
         {canViewInventory && (
           <>
             <NavLink 
               to="/items" 
-              className={({ isActive }) => 
-                `profile-nav-item ${isActive ? "active" : ""}`
-              }
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
             >
               Товары
             </NavLink>
 
             <NavLink 
               to="/warehouses" 
-              className={({ isActive }) => 
-                `profile-nav-item ${isActive ? "active" : ""}`
-              }
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
             >
               Склады
             </NavLink>
 
             <NavLink 
               to="/categories" 
-              className={({ isActive }) => 
-                `profile-nav-item ${isActive ? "active" : ""}`
-              }
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
             >
               Категории
             </NavLink>

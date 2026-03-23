@@ -72,7 +72,6 @@
   opacity: 0.85;
 }
 
-/* Стили для кнопок сохранения и отмены */
 .save-btn {
   background: #111;
   padding: 0 16px;
@@ -107,7 +106,6 @@
   background: #f75c5c;
 }
 
-/* Унифицированные стили для иконок */
 .action-btn {
   width: 38px;
   height: 38px;
@@ -151,7 +149,6 @@
   background: #ffc107;
 }
 
-/* Контейнер для кнопок действий */
 .actions-container {
   display: flex;
   gap: 4px;
@@ -160,7 +157,6 @@
   white-space: nowrap;
 }
 
-/* Стили для строки редактирования */
 .edit-actions {
   display: flex;
   gap: 8px;

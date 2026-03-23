@@ -5,6 +5,8 @@ import UsersPage from "./UsersPage/UsersPage";
 import ItemsManagePage from "./ItemsManagePage/ItemsManagePage";
 import WarehousesPage from "./WarehousesPage/WarehousesPage";
 import CategoriesPage from "./CategoriesPage/CategoriesPage";
+import CartPage from "./CartPage/CartPage";
+import CatalogPage from "./CatalogPage/CatalogPage";
 import Sidebar from "./Sidebar";
 import "./ProfileLayout.css";
 
@@ -49,6 +51,16 @@ function ProfileLayout() {
           <Route path="/categories" element={
             <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchasing_manager", "accountant", "supplier"]}>
               <CategoriesPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/catalog" element={
+            <ProtectedRoute allowedRoles={["customer"]}>
+              <CatalogPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/cart" element={
+            <ProtectedRoute allowedRoles={["customer"]}>
+              <CartPage />
             </ProtectedRoute>
           } />
           
