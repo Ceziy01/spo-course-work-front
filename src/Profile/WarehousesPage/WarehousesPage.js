@@ -3,8 +3,9 @@ import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
-import "./WarehousesPage.css";
-
+import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
+import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
+import "../../styles/shared.css"
 function WarehousesPage() {
   const { user } = useAuth();
   const canEdit = user?.role === "admin" || user?.role === "warehouse_keeper";
@@ -99,7 +100,7 @@ function WarehousesPage() {
             <th style={{ width: 60 }}>ID</th>
             <th>Название</th>
             <th>Адрес</th>
-            {canEdit && <th colSpan="2">Действия</th>}
+            {canEdit && <th style={{ width: 60 }} >Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -111,8 +112,8 @@ function WarehousesPage() {
                 <td><input name="address" value={editForm.address} onChange={handleEditChange} placeholder="Адрес" /></td>
                 <td colSpan="2">
                   <div className="edit-actions">
-                    <button type="button" className="save-btn" onClick={saveEdit}>Сохранить</button>
-                    <button type="button" className="cancel-btn" onClick={cancelEdit}>Отмена</button>
+                    <button type="button" className="action-btn apply-btn" onClick={saveEdit}><ApplyIcon/></button>
+                    <button type="button" className="action-btn deny-btn" onClick={cancelEdit}><DenyIcon/></button>
                   </div>
                 </td>
               </tr>

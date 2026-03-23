@@ -130,11 +130,13 @@
   height: 20px;
 }
 
-.action-btn.delete-btn {
+.action-btn.delete-btn,
+.action-btn.deny-btn {
   background: #e54848;
 }
 
-.action-btn.delete-btn:hover {
+.action-btn.delete-btn:hover,
+.action-btn.deny-btn:hover {
   background: #f75c5c;
 }
 
@@ -154,6 +156,14 @@
 .action-btn.reset-btn:hover,
 .action-btn.see-btn:hover {
   background: #ffc107;
+}
+ 
+.action-btn.apply-btn {
+  background: #00cf61;
+}
+
+.action-btn.apply-btn:hover {
+  background: #06e36d;
 }
 
 .actions-container {

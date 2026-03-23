@@ -5,6 +5,8 @@ import "../../styles/shared.css";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
 import { ReactComponent as LockIcon } from "../../assets/lock.svg";
+import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
+import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
 import ResetPasswordModal from "./ResetPasswordModal";
 
 function UsersPage() {
@@ -201,8 +203,8 @@ function UsersPage() {
                   </td>
                   <td colSpan="3">
                     <div className="edit-actions">
-                      <button type="button" className="save-btn" onClick={saveEdit}>Сохранить</button>
-                      <button type="button" className="cancel-btn" onClick={cancelEdit}>Отмена</button>
+                      <button type="button" className="action-btn apply-btn" onClick={saveEdit}><ApplyIcon/></button>
+                      <button type="button" className="action-btn deny-btn" onClick={cancelEdit}><DenyIcon/></button>
                     </div>
                   </td>
                 </tr>
