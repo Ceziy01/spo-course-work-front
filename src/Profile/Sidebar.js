@@ -9,6 +9,7 @@ function Sidebar() {
   const canViewInventory = user && !["customer"].includes(user.role);
   const canManageItems = user && (user.role === 'admin' || user.role === 'warehouse_keeper');
   const canViewCatalog = user && !canManageItems;
+  const isCustomer = user?.role === "customer";
 
   const handleLogout = () => {
     logout();
@@ -33,7 +34,7 @@ function Sidebar() {
             className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
           >Управление пользователями</NavLink>
         )}
-        {canViewCatalog && (
+        {isCustomer && (
           <>
             <NavLink 
               to="/catalog"
