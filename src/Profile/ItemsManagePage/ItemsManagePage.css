@@ -65,3 +65,23 @@
   width: 100%;
   overflow-x: auto;
 }
+
+.cross-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #999;
+  padding: 0;
+}
+
+.line-input {
+  padding: 0 30px 0 12px;
+  border-radius: 8px;
+  border: 1px solid #e3e3e3;
+  height: 38px
+}
