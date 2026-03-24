@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import { API_BASE_URL } from "../../config";
@@ -6,7 +6,10 @@ import ItemModal from "./ItemModal";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
 import { ReactComponent as EyeIcon } from "../../assets/eye.svg";
+import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
+import ActionButton from "../../components/ActionButton/ActionButton";
 import "./ItemsManagePage.css";
+import { exportTableToExcel } from "../../utils/export";
 
 function ItemsManagePage() {
   const { user } = useAuth();
@@ -20,6 +23,13 @@ function ItemsManagePage() {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const tableRef = useRef(null);
+
+  const handleExport = () => {
+    if (tableRef.current) {
+      exportTableToExcel(tableRef.current, `товары_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}`);
+    }
+  };
 
   const loadItems = async () => {
     const res = await fetchWithAuth("/items");
@@ -95,6 +105,7 @@ function ItemsManagePage() {
         <h2 className="page-title">Товары</h2>
         <div style={{ display: 'flex', gap: '10px' }}>
           <div style={{ position: 'relative', display: 'inline-block' }}>
+            <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
             <input
               type="text"
               placeholder="Поиск"
@@ -105,18 +116,14 @@ function ItemsManagePage() {
             />
               <button onClick={() => {setSearchQuery('');loadItems()}} className="cross-btn">✕</button>
           </div>
-          <button className="primary-btn" onClick={searchItems}>
-            Поиск
-          </button>
+          <button className="primary-btn" onClick={searchItems}>Найти</button>
           {canEdit && (
-            <button className="primary-btn" onClick={openCreateModal}>
-              Добавить товар
-            </button>
+            <button className="primary-btn" onClick={openCreateModal}>Добавить товар</button>
           )}
         </div>
       </div>
 
-      <table className="table items-table">
+      <table ref={tableRef} className="table items-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -148,30 +155,9 @@ function ItemsManagePage() {
               {canEdit && (
                 <td>
                   <div className="actions-container">
-                    {item.image_url && (
-                      <button
-                        type="button"
-                        className="action-btn see-btn"
-                        title="Просмотр"
-                        onClick={() => {
-                          setSelectedImage(item.image_url);
-                          setImageModalOpen(true);
-                        }}><EyeIcon/></button>
-                    )}
-
-                    <button
-                      type="button"
-                      className="action-btn delete-btn"
-                      onClick={() => handleDelete(item.id)}
-                      title="Удалить"
-                    ><BinIcon /></button>
-
-                    <button
-                      type="button"
-                      className="action-btn edit-btn"
-                      onClick={() => openEditModal(item)}
-                      title="Редактировать"
-                    ><PenIcon /></button>
+                    <ActionButton type="extra" onClick={() => { setSelectedImage(item.image_url); setImageModalOpen(true); }} tip="Предпросмотр"><EyeIcon/></ActionButton> 
+                    <ActionButton type="danger" onClick={() => handleDelete(item.id)} tip="Удалить"><BinIcon/></ActionButton>
+                    <ActionButton type="neutral" onClick={() => openEditModal(item)} tip="Редактировать"><PenIcon/></ActionButton>
                   </div>
                 </td>
               )}

@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
 import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
 import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
+import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
+import ActionButton from "../../components/ActionButton/ActionButton";
+import { exportTableToExcel } from "../../utils/export";
 import "../../styles/shared.css"
 function CategoriesPage() {
   const { user } = useAuth();
@@ -16,6 +19,13 @@ function CategoriesPage() {
 
   const [newName, setNewName] = useState("");
   const [newDescription, setNewDescription] = useState("");
+  const tableRef = useRef(null);
+  
+  const handleExport = () => {
+    if (tableRef.current) {
+      exportTableToExcel(tableRef.current, `категории_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}`);
+    }
+  };
 
   const loadCategories = async () => {
     const res = await fetchWithAuth("/categories");
@@ -95,9 +105,12 @@ function CategoriesPage() {
 
   return (
     <div className="container">
-      <h2 className="page-title">Категории</h2>
+      <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 className="page-title">Категории</h2>
+        <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
+      </div>
 
-      <table className="table">
+      <table ref={tableRef} className="table">
         <thead>
           <tr>
             <th style={{ width: 60 }}>ID</th>
@@ -115,8 +128,8 @@ function CategoriesPage() {
                 <td><input name="description" value={editForm.description} onChange={handleEditChange} placeholder="Описание" /></td>
                 <td colSpan="2">
                   <div className="edit-actions">
-                    <button type="button" className="action-btn apply-btn" onClick={saveEdit}><ApplyIcon/></button>
-                    <button type="button" className="action-btn deny-btn" onClick={cancelEdit}><DenyIcon/></button>
+                    <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon/></ActionButton>
+                    <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon/></ActionButton>
                   </div>
                 </td>
               </tr>
@@ -128,12 +141,8 @@ function CategoriesPage() {
                 {canEdit && (
                   <td colSpan="2">
                     <div className="actions-container">
-                      <button type="button" className="action-btn delete-btn" onClick={() => deleteCategory(cat.id)} title="Удалить">
-                        <BinIcon />
-                      </button>
-                      <button type="button" className="action-btn edit-btn" onClick={() => startEdit(cat)} title="Редактировать">
-                        <PenIcon />
-                      </button>
+                      <ActionButton type="neutral" onClick={() => startEdit(cat)} tip="Редактировать"><PenIcon/></ActionButton>
+                      <ActionButton type="danger" onClick={() => deleteCategory(cat.id)} tip="Удалить"><BinIcon/></ActionButton>
                     </div>
                   </td>
                 )}

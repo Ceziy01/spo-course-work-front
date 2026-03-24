@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { fetchWithAuth } from "../../utils/api";
 import { getRoleLabel } from "../../utils/utils";
 import "../../styles/shared.css";
@@ -7,7 +7,10 @@ import { ReactComponent as PenIcon } from "../../assets/pen.svg";
 import { ReactComponent as LockIcon } from "../../assets/lock.svg";
 import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
 import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
+import ActionButton from "../../components/ActionButton/ActionButton";
 import ResetPasswordModal from "./ResetPasswordModal";
+import { ReactComponent as ExcelIcon } from "../../assets/excel.svg"
+import { exportTableToExcel } from "../../utils/export";
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -26,6 +29,13 @@ function UsersPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
+  const tableRef = useRef(null);
+
+  const handleExport = () => {
+    if (tableRef.current) {
+      exportTableToExcel(tableRef.current, `пользователи_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}`);
+    }
+  };
 
   const [resetPasswordModal, setResetPasswordModal] = useState({
     isOpen: false,
@@ -156,7 +166,7 @@ function UsersPage() {
 
   return (
     <div className="container">
-      <h2 className="page-title">Пользователи</h2>
+      
 
       <ResetPasswordModal
         isOpen={resetPasswordModal.isOpen}
@@ -166,7 +176,11 @@ function UsersPage() {
       />
 
       <form onSubmit={createUser}>
-        <table className="table">
+        <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2 className="page-title" style={{ marginBottom: 0 }}>Пользователи</h2>
+          <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
+        </div>
+        <table ref={tableRef} className="table">
           <thead>
             <tr>
               <th style={{ width: 30 }}>ID</th>
@@ -195,7 +209,7 @@ function UsersPage() {
                       <option value="admin">Администратор</option>
                       <option value="management">Руководство</option>
                       <option value="sales_manager">Менеджер по продажам</option>
-                      <option value="purchasing_manager">Менеджер по закупкам</option>
+                      <option value="purchase_manager">Менеджер по закупкам</option>
                       <option value="warehouse_keeper">Кладовщик</option>
                       <option value="accountant">Бухгалтер</option>
                       <option value="supplier">Поставщик</option>
@@ -203,8 +217,8 @@ function UsersPage() {
                   </td>
                   <td colSpan="3">
                     <div className="edit-actions">
-                      <button type="button" className="action-btn apply-btn" onClick={saveEdit}><ApplyIcon/></button>
-                      <button type="button" className="action-btn deny-btn" onClick={cancelEdit}><DenyIcon/></button>
+                      <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon/></ActionButton>
+                      <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon/></ActionButton>
                     </div>
                   </td>
                 </tr>
@@ -219,15 +233,9 @@ function UsersPage() {
                   <td>{getRoleLabel(u.role)}</td>
                   <td colSpan="3">
                     <div className="actions-container">
-                      <button type="button" className="action-btn delete-btn" onClick={() => deleteUser(u.id)} title="Удалить">
-                        <BinIcon />
-                      </button>
-                      <button type="button" className="action-btn edit-btn" onClick={() => startEdit(u)} title="Редактировать">
-                        <PenIcon />
-                      </button>
-                      <button type="button" className="action-btn reset-btn" onClick={() => openResetPasswordModal(u.id, u.username)} title="Сбросить пароль">
-                        <LockIcon />
-                      </button>
+                      <ActionButton type="danger" onClick={() => deleteUser(u.id)} tip="Удалить"><BinIcon/></ActionButton>
+                      <ActionButton type="neutral" onClick={() => startEdit(u)} tip="Редактировать"><PenIcon/></ActionButton>
+                      <ActionButton type="extra" onClick={() => openResetPasswordModal(u.id, u.username)} tip="Сменить пароль"><LockIcon/></ActionButton> 
                     </div>
                   </td>
                 </tr>
@@ -246,7 +254,7 @@ function UsersPage() {
                   <option value="admin">Администратор</option>
                   <option value="management">Руководство</option>
                   <option value="sales_manager">Менеджер по продажам</option>
-                  <option value="purchasing_manager">Менеджер по закупкам</option>
+                  <option value="purchase_manager">Менеджер по закупкам</option>
                   <option value="warehouse_keeper">Кладовщик</option>
                   <option value="accountant">Бухгалтер</option>
                   <option value="supplier">Поставщик</option>

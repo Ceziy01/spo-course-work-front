@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { ReactComponent as PenIcon } from "../../assets/pen.svg";
 import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
 import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
+import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
+import ActionButton from "../../components/ActionButton/ActionButton";
+import { exportTableToExcel } from "../../utils/export";
 import "../../styles/shared.css"
 function WarehousesPage() {
   const { user } = useAuth();
@@ -16,6 +19,13 @@ function WarehousesPage() {
 
   const [newName, setNewName] = useState("");
   const [newAddress, setNewAddress] = useState("");
+  const tableRef = useRef(null);
+
+  const handleExport = () => {
+    if (tableRef.current) {
+      exportTableToExcel(tableRef.current, `склады_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}`);
+    }
+  };
 
   const loadWarehouses = async () => {
     const res = await fetchWithAuth("/warehouses");
@@ -92,9 +102,12 @@ function WarehousesPage() {
 
   return (
     <div className="container warehouses-page">
-      <h2 className="page-title">Склады</h2>
+      <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 className="page-title">Склады</h2>
+        <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
+      </div>
 
-      <table className="table">
+      <table ref={tableRef} className="table">
         <thead>
           <tr>
             <th style={{ width: 60 }}>ID</th>
@@ -112,8 +125,8 @@ function WarehousesPage() {
                 <td><input name="address" value={editForm.address} onChange={handleEditChange} placeholder="Адрес" /></td>
                 <td colSpan="2">
                   <div className="edit-actions">
-                    <button type="button" className="action-btn apply-btn" onClick={saveEdit}><ApplyIcon/></button>
-                    <button type="button" className="action-btn deny-btn" onClick={cancelEdit}><DenyIcon/></button>
+                    <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon/></ActionButton>
+                    <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon/></ActionButton>
                   </div>
                 </td>
               </tr>
@@ -125,12 +138,8 @@ function WarehousesPage() {
                 {canEdit && (
                   <td colSpan="2">
                     <div className="actions-container">
-                      <button type="button" className="action-btn delete-btn" onClick={() => deleteWarehouse(wh.id)} title="Удалить">
-                        <BinIcon />
-                      </button>
-                      <button type="button" className="action-btn edit-btn" onClick={() => startEdit(wh)} title="Редактировать">
-                        <PenIcon />
-                      </button>
+                      <ActionButton type="neutral" onClick={() => startEdit(wh)} tip="Редактировать"><PenIcon/></ActionButton>
+                      <ActionButton type="danger" onClick={() => deleteWarehouse(wh.id)} tip="Удалить"><BinIcon/></ActionButton>
                     </div>
                   </td>
                 )}

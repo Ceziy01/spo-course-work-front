@@ -130,31 +130,27 @@
   height: 20px;
 }
 
-.action-btn.delete-btn,
-.action-btn.deny-btn {
+.action-btn.danger-btn {
   background: #e54848;
 }
 
-.action-btn.delete-btn:hover,
-.action-btn.deny-btn:hover {
+.action-btn.danger-btn:hover {
   background: #f75c5c;
 }
 
-.action-btn.edit-btn {
+.action-btn.neutral-btn {
   background: #d0d0d0;
 }
 
-.action-btn.edit-btn:hover {
+.action-btn.neutral-btn:hover {
   background: #e6e5e5;
 }
 
-.action-btn.reset-btn, 
-.action-btn.see-btn {
+.action-btn.extra-btn {
   background: #f0b400;
 }
 
-.action-btn.reset-btn:hover,
-.action-btn.see-btn:hover {
+.action-btn.extra-btn:hover {
   background: #ffc107;
 }
  
@@ -164,6 +160,13 @@
 
 .action-btn.apply-btn:hover {
   background: #06e36d;
+}
+.action-btn.excel-btn {
+  background: #107c41;
+}
+
+.action-btn.excel-btn:hover {
+  background: #14a255;
 }
 
 .actions-container {

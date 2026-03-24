@@ -37,19 +37,19 @@ function ProfileLayout() {
           {isAdmin && <Route path="/users" element={<UsersPage />} />}
 
           <Route path="/items" element={
-            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchasing_manager", "accountant", "supplier"]}>
+            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant", "supplier"]}>
               <ItemsManagePage />
             </ProtectedRoute>
           } />
           
           <Route path="/warehouses" element={
-            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchasing_manager", "accountant", "supplier"]}>
+            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant", "supplier"]}>
               <WarehousesPage />
             </ProtectedRoute>
           } />
           
           <Route path="/categories" element={
-            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchasing_manager", "accountant", "supplier"]}>
+            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant", "supplier"]}>
               <CategoriesPage />
             </ProtectedRoute>
           } />
