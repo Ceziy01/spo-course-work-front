@@ -2,9 +2,11 @@ import { useCart } from "../../hooks/useCart";
 import { fetchWithAuth } from "../../utils/api";
 import "./CartPage.css";
 import { ReactComponent as BinIcon } from "../../assets/bin.svg";
+import { useNavigate } from "react-router-dom";
 
 function CartPage() {
   const { cart, loading, updating, updateQuantity, removeItem, loadCart } = useCart();
+  const navigate = useNavigate();
 
   const checkout = async () => {
     if (!window.confirm("Оформить заказ? Корзина будет очищена.")) return;
@@ -12,6 +14,7 @@ function CartPage() {
     if (res.ok) {
       alert("Заказ оформлен!");
       loadCart();
+      navigate("/orders");
     } else {
       const error = await res.json();
       alert(error.detail || "Ошибка оформления");
@@ -45,12 +48,12 @@ function CartPage() {
                   <td>{item.name}</td>
                   <td>{item.price} ₽</td>
                   <td>
-                    <button 
+                    <button
                       onClick={() => updateQuantity(item.item_id, item.quantity - 1)}
                       disabled={updating[item.item_id]}
                     >-</button>
                     {item.quantity}
-                    <button 
+                    <button
                       onClick={() => updateQuantity(item.item_id, item.quantity + 1)}
                       disabled={updating[item.item_id]}
                     >+</button>

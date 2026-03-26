@@ -47,3 +47,44 @@ export function exportTableToExcel(tableElement, filename = 'export', excludeLas
 
   XLSX.writeFile(wb, `${filename}.xlsx`);
 }
+
+export function exportOrdersToExcel(orders, filename = 'заказы') {
+  const rows = [];
+  
+  rows.push([
+    'ID заказа',
+    'ID пользователя',
+    'Статус',
+    'Дата создания',
+    'Общая сумма',
+    'ID товара',
+    'Название товара',
+    'Количество',
+    'Цена на момент заказа',
+    'Сумма позиции'
+  ]);
+
+  orders.forEach(order => {
+    order.items.forEach(item => {
+      rows.push([
+        order.id,
+        order.user_id,
+        order.status,
+        new Date(order.created_at).toLocaleString(),
+        order.total_price,
+        item.item_id,
+        item.name,
+        item.quantity,
+        item.price_at_time,
+        item.quantity * item.price_at_time
+      ]);
+    });
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Заказы');
+  
+  const safeFilename = `${filename}_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}`;
+  XLSX.writeFile(wb, `${safeFilename}.xlsx`);
+}
