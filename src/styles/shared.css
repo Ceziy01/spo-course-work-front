@@ -218,3 +218,10 @@
   margin: 0;
   padding: 0;
 }
+
+.action-btn.impersonate-btn {
+    background: #4caf50;
+}
+.action-btn.impersonate-btn:hover {
+    background: #45a049;
+}

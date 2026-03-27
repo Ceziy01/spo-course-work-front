@@ -70,6 +70,21 @@ function Sidebar() {
             >
               Категории
             </NavLink>
+            <NavLink
+              to="/suppliers"
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+            >
+              Поставщики
+            </NavLink>
+            <NavLink
+              to="/clients"
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+            >
+              Клиенты
+            </NavLink>
+            <NavLink to="/purchases" className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}>
+              Закупки
+            </NavLink>
           </>
         )}
         {isCustomer && (

@@ -6,8 +6,7 @@ export function getRoleLabel(role) {
         sales_manager: "Менеджер по продажам",
         warehouse_keeper: "Кладовщик",
         accountant: "Бухгалтер",
-        customer: "Клиент",
-        supplier: "Поставщик"
+        customer: "Клиент"
     };
     return labels[role] ?? "Неизвестная роль";
 }

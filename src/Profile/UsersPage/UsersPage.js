@@ -11,6 +11,7 @@ import ActionButton from "../../components/ActionButton/ActionButton";
 import ResetPasswordModal from "./ResetPasswordModal";
 import { ReactComponent as ExcelIcon } from "../../assets/excel.svg"
 import { exportTableToExcel } from "../../utils/export";
+import { ReactComponent as ImpersonateIcon } from "../../assets/impersonate.svg";
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -31,9 +32,27 @@ function UsersPage() {
   const [role, setRole] = useState("customer");
   const tableRef = useRef(null);
 
+  const impersonate = async (userId) => {
+    if (!window.confirm("Войти от имени этого пользователя?")) return;
+    try {
+      const res = await fetchWithAuth(`/auth/admin/impersonate/${userId}`, { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("token", data.access_token);
+        window.location.href = "/info";
+      } else {
+        const error = await res.json();
+        alert(error.detail || "Ошибка входа");
+      }
+    } catch (error) {
+      console.error("Impersonate error:", error);
+      alert("Ошибка входа");
+    }
+  };
+
   const handleExport = () => {
     if (tableRef.current) {
-      exportTableToExcel(tableRef.current, `пользователи_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}`);
+      exportTableToExcel(tableRef.current, `пользователи_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`);
     }
   };
 
@@ -166,7 +185,7 @@ function UsersPage() {
 
   return (
     <div className="container">
-      
+
 
       <ResetPasswordModal
         isOpen={resetPasswordModal.isOpen}
@@ -178,7 +197,7 @@ function UsersPage() {
       <form onSubmit={createUser}>
         <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2 className="page-title" style={{ marginBottom: 0 }}>Пользователи</h2>
-          <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
+          <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon /></ActionButton>
         </div>
         <table ref={tableRef} className="table">
           <thead>
@@ -217,8 +236,8 @@ function UsersPage() {
                   </td>
                   <td colSpan="3">
                     <div className="edit-actions">
-                      <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon/></ActionButton>
-                      <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon/></ActionButton>
+                      <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon /></ActionButton>
+                      <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon /></ActionButton>
                     </div>
                   </td>
                 </tr>
@@ -233,9 +252,10 @@ function UsersPage() {
                   <td>{getRoleLabel(u.role)}</td>
                   <td colSpan="3">
                     <div className="actions-container">
-                      <ActionButton type="danger" onClick={() => deleteUser(u.id)} tip="Удалить"><BinIcon/></ActionButton>
-                      <ActionButton type="neutral" onClick={() => startEdit(u)} tip="Редактировать"><PenIcon/></ActionButton>
-                      <ActionButton type="extra" onClick={() => openResetPasswordModal(u.id, u.username)} tip="Сменить пароль"><LockIcon/></ActionButton> 
+                      <ActionButton type="danger" onClick={() => deleteUser(u.id)} tip="Удалить"><BinIcon /></ActionButton>
+                      <ActionButton type="neutral" onClick={() => startEdit(u)} tip="Редактировать"><PenIcon /></ActionButton>
+                      <ActionButton type="extra" onClick={() => openResetPasswordModal(u.id, u.username)} tip="Сменить пароль"><LockIcon /></ActionButton>
+                      <ActionButton type="impersonate" tip="Войти как пользователь"onClick={() => impersonate(u.id)}><ImpersonateIcon /></ActionButton>
                     </div>
                   </td>
                 </tr>
@@ -257,7 +277,6 @@ function UsersPage() {
                   <option value="purchase_manager">Менеджер по закупкам</option>
                   <option value="warehouse_keeper">Кладовщик</option>
                   <option value="accountant">Бухгалтер</option>
-                  <option value="supplier">Поставщик</option>
                 </select>
               </td>
               <td colSpan="3">

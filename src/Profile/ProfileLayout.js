@@ -7,8 +7,11 @@ import WarehousesPage from "./WarehousesPage/WarehousesPage";
 import CategoriesPage from "./CategoriesPage/CategoriesPage";
 import MyOrdersPage from "./MyOrdersPage/MyOrdersPage";
 import OrdersManagePage from "./OrdersManagePage/OrdersManagePage";
+import SuppliersPage from "./SuppliersPage/SuppliersPage";
 import CartPage from "./CartPage/CartPage";
 import CatalogPage from "./CatalogPage/CatalogPage";
+import ClientsPage from "./ClientsPage/ClientsPage";
+import PurchasesPage from "./PurchasesPage/PurchasesPage";
 import Sidebar from "./Sidebar";
 import "./ProfileLayout.css";
 
@@ -39,19 +42,17 @@ function ProfileLayout() {
           {isAdmin && <Route path="/users" element={<UsersPage />} />}
 
           <Route path="/items" element={
-            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant", "supplier"]}>
+            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant"]}>
               <ItemsManagePage />
             </ProtectedRoute>
           } />
-
           <Route path="/warehouses" element={
-            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant", "supplier"]}>
+            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant"]}>
               <WarehousesPage />
             </ProtectedRoute>
           } />
-
           <Route path="/categories" element={
-            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant", "supplier"]}>
+            <ProtectedRoute allowedRoles={["admin", "warehouse_keeper", "management", "sales_manager", "purchase_manager", "accountant"]}>
               <CategoriesPage />
             </ProtectedRoute>
           } />
@@ -73,6 +74,21 @@ function ProfileLayout() {
           <Route path="/admin/orders" element={
             <ProtectedRoute allowedRoles={["admin", "sales_manager", "management", "accountant"]}>
               <OrdersManagePage readOnly={user?.role === "management" || user?.role === "accountant"} />
+            </ProtectedRoute>
+          } />
+          <Route path="/suppliers" element={
+            <ProtectedRoute allowedRoles={["admin", "purchase_manager", "management", "sales_manager", "accountant"]}>
+              <SuppliersPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/clients" element={
+            <ProtectedRoute allowedRoles={["admin", "sales_manager", "management", "accountant"]}>
+              <ClientsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/purchases" element={
+            <ProtectedRoute allowedRoles={["admin", "purchase_manager", "warehouse_keeper", "management", "accountant"]}>
+              <PurchasesPage />
             </ProtectedRoute>
           } />
 

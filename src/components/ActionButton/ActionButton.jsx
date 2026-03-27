@@ -4,20 +4,23 @@ function ActionButton({ children, onClick, tip, type = 'default', color, disable
   let typeClass = '';
   switch (type) {
     case "danger":
-        typeClass = "danger-btn";
-        break;
+      typeClass = "danger-btn";
+      break;
     case "neutral":
-        typeClass = "neutral-btn";
-        break;
+      typeClass = "neutral-btn";
+      break;
     case "apply":
-        typeClass = "apply-btn";
-        break;
+      typeClass = "apply-btn";
+      break;
     case "extra":
-        typeClass = "extra-btn";
-        break;
+      typeClass = "extra-btn";
+      break;
     case "excel":
-        typeClass = "excel-btn";
-        break;
+      typeClass = "excel-btn";
+      break;
+    case "impersonate":
+      typeClass = "impersonate-btn";
+      break;
   }
 
   const style = color ? { backgroundColor: color } : {};
