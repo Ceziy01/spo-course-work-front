@@ -77,12 +77,12 @@ function ProfileLayout() {
             </ProtectedRoute>
           } />
           <Route path="/suppliers" element={
-            <ProtectedRoute allowedRoles={["admin", "purchase_manager", "management", "sales_manager", "accountant"]}>
+            <ProtectedRoute allowedRoles={["admin", "purchase_manager", "management", "sales_manager", "accountant", "warehouse_keeper"]}>
               <SuppliersPage />
             </ProtectedRoute>
           } />
           <Route path="/clients" element={
-            <ProtectedRoute allowedRoles={["admin", "sales_manager", "management", "accountant"]}>
+            <ProtectedRoute allowedRoles={["admin", "sales_manager", "management", "accountant", "warehouse_keeper", "purchase_manager"]}>
               <ClientsPage />
             </ProtectedRoute>
           } />
