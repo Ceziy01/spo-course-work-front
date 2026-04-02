@@ -7,6 +7,7 @@ function Sidebar() {
   const { user, isAdmin, logout } = useAuth();
 
   const canViewInventory = user && !["customer"].includes(user.role);
+  const canViewPurchase = canViewInventory && !["sales_manager"].includes(user.role);
   const canManageItems = user && (user.role === 'admin' || user.role === 'warehouse_keeper');
   const isCustomer = user?.role === "customer";
   const canManageOrders = user && ["admin", "sales_manager"].includes(user.role);
@@ -82,10 +83,12 @@ function Sidebar() {
             >
               Клиенты
             </NavLink>
-            <NavLink to="/purchases" className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}>
-              Закупки
-            </NavLink>
           </>
+        )}
+        {canViewPurchase && (
+          <NavLink to="/purchases" className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}>
+            Закупки
+          </NavLink>
         )}
         {isCustomer && (
           <NavLink

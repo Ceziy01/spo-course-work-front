@@ -72,7 +72,7 @@ function ProfileLayout() {
             </ProtectedRoute>
           } />
           <Route path="/admin/orders" element={
-            <ProtectedRoute allowedRoles={["admin", "sales_manager", "management", "accountant"]}>
+            <ProtectedRoute allowedRoles={["admin", "management", "accountant"]}>
               <OrdersManagePage readOnly={user?.role === "management" || user?.role === "accountant"} />
             </ProtectedRoute>
           } />
