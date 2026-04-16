@@ -1,11 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
-import { ReactComponent as BinIcon } from "../../assets/bin.svg";
-import { ReactComponent as PenIcon } from "../../assets/pen.svg";
-import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
-import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import { exportTableToExcel } from "../../utils/export";
 import "../../styles/shared.css";
@@ -103,18 +98,20 @@ function SuppliersPage() {
 
   return (
     <div className="container">
-      <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div className="page-header">
         <h2 className="page-title">Поставщики</h2>
-        <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
+        <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
+          <span className="material-symbols-outlined">table_view</span>
+        </ActionButton>
       </div>
 
       <table ref={tableRef} className="table">
         <thead>
           <tr>
-            <th style={{ width: 60 }}>ID</th>
+            <th style={{ width: '60px' }}>ID</th>
             <th>Название</th>
             <th>Адрес</th>
-            {canEdit && <th style={{ width: 100 }}>Действия</th>}
+            {canEdit && <th style={{ width: '120px' }}>Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -127,8 +124,8 @@ function SuppliersPage() {
                 {canEdit && (
                   <td>
                     <div className="edit-actions">
-                      <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon/></ActionButton>
-                      <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon/></ActionButton>
+                      <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><span className="material-symbols-outlined">check</span></ActionButton>
+                      <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><span className="material-symbols-outlined">close</span></ActionButton>
                     </div>
                   </td>
                 )}
@@ -141,8 +138,8 @@ function SuppliersPage() {
                 {canEdit && (
                   <td>
                     <div className="actions-container">
-                      <ActionButton type="neutral" onClick={() => startEdit(sup)} tip="Редактировать"><PenIcon/></ActionButton>
-                      <ActionButton type="danger" onClick={() => deleteSupplier(sup.id)} tip="Удалить"><BinIcon/></ActionButton>
+                      <ActionButton type="neutral" onClick={() => startEdit(sup)} tip="Редактировать"><span className="material-symbols-outlined">edit</span></ActionButton>
+                      <ActionButton type="danger" onClick={() => deleteSupplier(sup.id)} tip="Удалить"><span className="material-symbols-outlined">delete</span></ActionButton>
                     </div>
                   </td>
                 )}

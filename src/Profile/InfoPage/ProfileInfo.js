@@ -13,7 +13,7 @@ function ProfileInfo() {
   useEffect(() => {
     if (!user) {
       fetchWithAuth("/auth/users/me")
-        .then(res => {
+        .then((res) => {
           if (!res.ok) throw new Error("Failed to load profile");
           return res.json();
         })
@@ -42,13 +42,13 @@ function ProfileInfo() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+      <div className="page-header">
         <h2 className="page-title">Информация об аккаунте</h2>
         <button className="primary-btn" onClick={() => setModalOpen(true)}>
           Сменить пароль
         </button>
       </div>
-      
+
       <div className="profile-info-container">
         <div className="profile-info-card">
           <div className="profile-info-row">

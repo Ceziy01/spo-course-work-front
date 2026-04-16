@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { fetchWithAuth } from "../../utils/api";
 import { exportTableToExcel } from "../../utils/export";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
 import "../../styles/shared.css";
 
 function ClientsPage() {
@@ -36,10 +35,10 @@ function ClientsPage() {
 
   return (
     <div className="container">
-      <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div className="page-header">
         <h2 className="page-title">Клиенты</h2>
         <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
-          <ExcelIcon />
+          <span className="material-symbols-outlined">table_view</span>
         </ActionButton>
       </div>
       <table ref={tableRef} className="table">

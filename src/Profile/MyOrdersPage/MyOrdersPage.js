@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../../utils/api";
 import { exportOrdersToExcel } from "../../utils/export";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
 import "../../styles/shared.css";
+
+const statusMap = {
+  created: "Создан",
+  confirmed: "Подтверждён",
+  cancelled: "Отменён"
+};
 
 function MyOrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -36,10 +41,10 @@ function MyOrdersPage() {
 
   return (
     <div className="container">
-      <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div className="page-header">
         <h2 className="page-title" style={{ marginBottom: 0 }}>Мои заказы</h2>
         <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
-          <ExcelIcon />
+          <span className="material-symbols-outlined">table_view</span>
         </ActionButton>
       </div>
 
@@ -47,10 +52,10 @@ function MyOrdersPage() {
         <p>У вас пока нет заказов</p>
       ) : (
         orders.map(order => (
-          <div key={order.id} style={{ marginBottom: "24px", background: "white", borderRadius: "12px", padding: "16px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+          <div key={order.id} className="order-card">
+            <div className="order-header">
               <strong>Заказ #{order.id}</strong>
-              <span>Статус: {order.status}</span>
+              <span>Статус: {statusMap[order.status] || order.status}</span>
               <span>Дата: {new Date(order.created_at).toLocaleString()}</span>
               <strong>Сумма: {order.total_price} ₽</strong>
             </div>

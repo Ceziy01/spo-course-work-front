@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../../utils/api";
 import { useAuth } from "../../Auth/AuthContext";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
-import { ReactComponent as BinIcon } from "../../assets/bin.svg";
-import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
 import PurchaseCreateModal from "./PurchaseCreateModal";
 import CompletePurchaseModal from "./CompletePurchaseModal";
 import { exportTableToExcel } from "../../utils/export";
@@ -86,7 +83,7 @@ function PurchasesPage() {
     };
 
     const statusColors = {
-        created: "#6c757d",
+        created: "var(--text-secondary)",
         initiated: "#fd7e14",
         completed: "#28a745"
     };
@@ -101,14 +98,14 @@ function PurchasesPage() {
 
     return (
         <div className="container">
-            <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div className="page-header">
                 <h2 className="page-title">Закупки</h2>
                 <div style={{ display: 'flex', gap: '10px' }}>
                     {canEdit && (
                         <button className="primary-btn" onClick={handleCreate}>Создать закупку</button>
                     )}
                     <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
-                        <ExcelIcon />
+                        <span className="material-symbols-outlined">table_view</span>
                     </ActionButton>
                 </div>
             </div>
@@ -140,13 +137,19 @@ function PurchasesPage() {
                             <td>
                                 <div className="actions-container">
                                     {canEdit && p.status === "created" && (
-                                        <ActionButton type="danger" onClick={() => handleDelete(p.id)} tip="Удалить" disabled={updating[p.id]}><BinIcon /></ActionButton>
+                                        <ActionButton type="danger" onClick={() => handleDelete(p.id)} tip="Удалить" disabled={updating[p.id]}>
+                                            <span className="material-symbols-outlined">delete</span>
+                                        </ActionButton>
                                     )}
                                     {canEdit && p.status === "created" && (
-                                        <ActionButton type="neutral" onClick={() => handleInitiate(p.id)} tip="Инициировать" disabled={updating[p.id]}>+</ActionButton>
+                                        <ActionButton type="neutral" onClick={() => handleInitiate(p.id)} tip="Инициировать" disabled={updating[p.id]}>
+                                            <span className="material-symbols-outlined">play_arrow</span>
+                                        </ActionButton>
                                     )}
                                     {canComplete && p.status === "initiated" && (
-                                        <ActionButton type="apply" onClick={() => handleCompleteClick(p)} tip="Завершить" disabled={updating[p.id]}><ApplyIcon/></ActionButton>
+                                        <ActionButton type="apply" onClick={() => handleCompleteClick(p)} tip="Завершить" disabled={updating[p.id]}>
+                                            <span className="material-symbols-outlined">check</span>
+                                        </ActionButton>
                                     )}
                                 </div>
                             </td>

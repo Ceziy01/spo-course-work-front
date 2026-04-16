@@ -1,7 +1,6 @@
 import { useCart } from "../../hooks/useCart";
 import { fetchWithAuth } from "../../utils/api";
 import "./CartPage.css";
-import { ReactComponent as BinIcon } from "../../assets/bin.svg";
 import { useNavigate } from "react-router-dom";
 
 function CartPage() {
@@ -66,7 +65,9 @@ function CartPage() {
                       onClick={() => removeItem(item.item_id)}
                       disabled={updating[item.item_id]}
                       title="Удалить"
-                    ><BinIcon /></button>
+                    >
+                      <span className="material-symbols-outlined">delete</span>
+                    </button>
                   </td>
                 </tr>
               ))}

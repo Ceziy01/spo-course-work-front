@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../UsersPage/ResetPasswordModal.css";
+
 function ChangePasswordModal({ isOpen, onClose, onConfirm }) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -49,12 +50,8 @@ function ChangePasswordModal({ isOpen, onClose, onConfirm }) {
         />
 
         <div className="modal-actions">
-          <button className="modal-btn secondary" onClick={onClose}>
-            Отмена
-          </button>
-          <button className="modal-btn primary" onClick={handleSubmit}>
-            Сменить пароль
-          </button>
+          <button className="modal-btn secondary" onClick={onClose}>Отмена</button>
+          <button className="modal-btn primary" onClick={handleSubmit}>Сменить пароль</button>
         </div>
       </div>
     </div>

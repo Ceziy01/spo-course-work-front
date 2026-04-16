@@ -1,14 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
-import { ReactComponent as BinIcon } from "../../assets/bin.svg";
-import { ReactComponent as PenIcon } from "../../assets/pen.svg";
-import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
-import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import { exportTableToExcel } from "../../utils/export";
 import "../../styles/shared.css"
+
 function WarehousesPage() {
   const { user } = useAuth();
   const canEdit = user?.role === "admin" || user?.role === "warehouse_keeper";
@@ -102,18 +98,20 @@ function WarehousesPage() {
 
   return (
     <div className="container warehouses-page">
-      <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div className="page-header">
         <h2 className="page-title">Склады</h2>
-        <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
+        <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
+          <span className="material-symbols-outlined">table_view</span>
+        </ActionButton>
       </div>
 
       <table ref={tableRef} className="table">
         <thead>
           <tr>
-            <th style={{ width: 60 }}>ID</th>
+            <th style={{ width: '60px' }}>ID</th>
             <th>Название</th>
             <th>Адрес</th>
-            {canEdit && <th style={{ width: 60 }} >Действия</th>}
+            {canEdit && <th style={{ width: '120px' }}>Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -123,10 +121,10 @@ function WarehousesPage() {
                 <td>{wh.id}</td>
                 <td><input name="name" value={editForm.name} onChange={handleEditChange} placeholder="Название" /></td>
                 <td><input name="address" value={editForm.address} onChange={handleEditChange} placeholder="Адрес" /></td>
-                <td colSpan="2">
+                <td>
                   <div className="edit-actions">
-                    <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon/></ActionButton>
-                    <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon/></ActionButton>
+                    <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><span className="material-symbols-outlined">check</span></ActionButton>
+                    <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><span className="material-symbols-outlined">close</span></ActionButton>
                   </div>
                 </td>
               </tr>
@@ -136,10 +134,10 @@ function WarehousesPage() {
                 <td>{wh.name}</td>
                 <td>{wh.address}</td>
                 {canEdit && (
-                  <td colSpan="2">
+                  <td>
                     <div className="actions-container">
-                      <ActionButton type="neutral" onClick={() => startEdit(wh)} tip="Редактировать"><PenIcon/></ActionButton>
-                      <ActionButton type="danger" onClick={() => deleteWarehouse(wh.id)} tip="Удалить"><BinIcon/></ActionButton>
+                      <ActionButton type="neutral" onClick={() => startEdit(wh)} tip="Редактировать"><span className="material-symbols-outlined">edit</span></ActionButton>
+                      <ActionButton type="danger" onClick={() => deleteWarehouse(wh.id)} tip="Удалить"><span className="material-symbols-outlined">delete</span></ActionButton>
                     </div>
                   </td>
                 )}
@@ -151,7 +149,7 @@ function WarehousesPage() {
               <td></td>
               <td><input placeholder="Название" value={newName} onChange={e => setNewName(e.target.value)} /></td>
               <td><input placeholder="Адрес" value={newAddress} onChange={e => setNewAddress(e.target.value)} /></td>
-              <td colSpan="2">
+              <td>
                 <button type="button" className="primary-btn" onClick={createWarehouse}>Добавить</button>
               </td>
             </tr>

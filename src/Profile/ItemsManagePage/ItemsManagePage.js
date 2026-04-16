@@ -3,10 +3,6 @@ import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import { API_BASE_URL } from "../../config";
 import ItemModal from "./ItemModal";
-import { ReactComponent as BinIcon } from "../../assets/bin.svg";
-import { ReactComponent as PenIcon } from "../../assets/pen.svg";
-import { ReactComponent as EyeIcon } from "../../assets/eye.svg";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import "./ItemsManagePage.css";
 import { exportTableToExcel } from "../../utils/export";
@@ -103,18 +99,24 @@ function ItemsManagePage() {
     <div className="container">
       <div className="items-header">
         <h2 className="page-title">Товары</h2>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <div style={{ position: 'relative', display: 'inline-block' }}>
-            <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon/></ActionButton>
+        <div className="search-section">
+          <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
+            <span className="material-symbols-outlined">table_view</span>
+          </ActionButton>
+          <div className="search-wrapper">
             <input
               type="text"
               placeholder="Поиск"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && searchItems()}
-              className="line-input"
+              className="search-input"
             />
-              <button onClick={() => {setSearchQuery('');loadItems()}} className="cross-btn">✕</button>
+            {searchQuery && (
+              <button onClick={resetSearch} className="search-clear">
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>close</span>
+              </button>
+            )}
           </div>
           <button className="primary-btn" onClick={searchItems}>Найти</button>
           {canEdit && (
@@ -126,16 +128,16 @@ function ItemsManagePage() {
       <table ref={tableRef} className="table items-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Артикул</th>
+            <th style={{ width: '50px' }}>ID</th>
+            <th style={{ width: '120px' }}>Артикул</th>
             <th>Название</th>
-            <th>Категория</th>
-            <th>Кол-во</th>
-            <th>Ед.</th>
-            <th>Цена</th>
-            <th>Склад</th>
-            <th>Срок</th>
-            {canEdit && <th>Действия</th>}
+            <th style={{ width: '140px' }}>Категория</th>
+            <th style={{ width: '80px' }}>Кол-во</th>
+            <th style={{ width: '60px' }}>Ед.</th>
+            <th style={{ width: '100px' }}>Цена</th>
+            <th style={{ width: '140px' }}>Склад</th>
+            <th style={{ width: '100px' }}>Срок</th>
+            {canEdit && <th style={{ width: '140px' }}>Действия</th>}
           </tr>
         </thead>
 
@@ -155,9 +157,9 @@ function ItemsManagePage() {
               {canEdit && (
                 <td>
                   <div className="actions-container">
-                    <ActionButton type="extra" onClick={() => { setSelectedImage(item.image_url); setImageModalOpen(true); }} tip="Предпросмотр"><EyeIcon/></ActionButton> 
-                    <ActionButton type="danger" onClick={() => handleDelete(item.id)} tip="Удалить"><BinIcon/></ActionButton>
-                    <ActionButton type="neutral" onClick={() => openEditModal(item)} tip="Редактировать"><PenIcon/></ActionButton>
+                    <ActionButton type="extra" onClick={() => { setSelectedImage(item.image_url); setImageModalOpen(true); }} tip="Предпросмотр"><span className="material-symbols-outlined">visibility</span></ActionButton> 
+                    <ActionButton type="danger" onClick={() => handleDelete(item.id)} tip="Удалить"><span className="material-symbols-outlined">delete</span></ActionButton>
+                    <ActionButton type="neutral" onClick={() => openEditModal(item)} tip="Редактировать"><span className="material-symbols-outlined">edit</span></ActionButton>
                   </div>
                 </td>
               )}

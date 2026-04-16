@@ -1,7 +1,7 @@
 .profile-layout {
   display: flex;
   min-height: 100vh;
-  background: #f4f5f7;
+  background: var(--bg-body);
 }
 
 .profile-content {
@@ -15,5 +15,5 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 64px);
-  margin-top: 20px; 
-  }
+  margin-top: 20px;
+}

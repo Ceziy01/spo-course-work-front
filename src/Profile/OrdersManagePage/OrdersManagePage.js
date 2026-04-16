@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../../utils/api";
 import { exportOrdersToExcel } from "../../utils/export";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import { ReactComponent as BinIcon } from "../../assets/bin.svg";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg";
 import "../../styles/shared.css";
+
+const statusMap = {
+  created: "Создан",
+  confirmed: "Подтверждён",
+  cancelled: "Отменён"
+};
 
 function OrdersManagePage({ readOnly = false }) {
     const [orders, setOrders] = useState([]);
@@ -48,7 +52,7 @@ function OrdersManagePage({ readOnly = false }) {
     };
 
     const changeStatus = async (orderId, newStatus) => {
-        if (!window.confirm(`Изменить статус заказа #${orderId} на "${newStatus}"?`)) return;
+        if (!window.confirm(`Изменить статус заказа #${orderId} на "${statusMap[newStatus] || newStatus}"?`)) return;
         setUpdating(prev => ({ ...prev, [orderId]: true }));
         const res = await fetchWithAuth(`/orders/${orderId}`, {
             method: "PATCH",
@@ -67,10 +71,10 @@ function OrdersManagePage({ readOnly = false }) {
 
     return (
         <div className="container">
-            <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h2 className="page-title" style={{ marginBottom: 0 }}>Управление заказами</h2>
+            <div className="page-header">
+                <h2 className="page-title" style={{ marginBottom: 0 }}>Заказы</h2>
                 <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
-                    <ExcelIcon />
+                    <span className="material-symbols-outlined">table_view</span>
                 </ActionButton>
             </div>
 
@@ -78,11 +82,11 @@ function OrdersManagePage({ readOnly = false }) {
                 <p>Нет заказов</p>
             ) : (
                 orders.map(order => (
-                    <div key={order.id} style={{ marginBottom: "24px", background: "white", borderRadius: "12px", padding: "16px" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", alignItems: "center" }}>
+                    <div key={order.id} className="order-card">
+                        <div className="order-header">
                             <strong>Заказ #{order.id}</strong>
                             <span>Пользователь: {order.user_id}</span>
-                            <span>Статус: {order.status}</span>
+                            <span>Статус: {statusMap[order.status] || order.status}</span>
                             <span>Дата: {new Date(order.created_at).toLocaleString()}</span>
                             <strong>Сумма: {order.total_price} ₽</strong>
                             {!readOnly && (
@@ -91,7 +95,8 @@ function OrdersManagePage({ readOnly = false }) {
                                         value={order.status}
                                         onChange={(e) => changeStatus(order.id, e.target.value)}
                                         disabled={updating[order.id]}
-                                        style={{ padding: "6px 12px", borderRadius: "6px" }}
+                                        className="table-select"
+                                        style={{ width: 'auto', minWidth: '140px' }}
                                     >
                                         <option value="created">Создан</option>
                                         <option value="confirmed">Подтверждён</option>
@@ -103,7 +108,7 @@ function OrdersManagePage({ readOnly = false }) {
                                         onClick={() => deleteOrder(order.id)}
                                         disabled={updating[order.id]}
                                     >
-                                        <BinIcon />
+                                        <span className="material-symbols-outlined">delete</span>
                                     </ActionButton>
                                 </div>
                             )}

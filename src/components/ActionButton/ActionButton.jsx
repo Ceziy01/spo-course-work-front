@@ -21,6 +21,8 @@ function ActionButton({ children, onClick, tip, type = 'default', color, disable
     case "impersonate":
       typeClass = "impersonate-btn";
       break;
+    default:
+      typeClass = '';
   }
 
   const style = color ? { backgroundColor: color } : {};

@@ -2,16 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { fetchWithAuth } from "../../utils/api";
 import { getRoleLabel } from "../../utils/utils";
 import "../../styles/shared.css";
-import { ReactComponent as BinIcon } from "../../assets/bin.svg";
-import { ReactComponent as PenIcon } from "../../assets/pen.svg";
-import { ReactComponent as LockIcon } from "../../assets/lock.svg";
-import { ReactComponent as ApplyIcon } from "../../assets/apply.svg";
-import { ReactComponent as DenyIcon } from "../../assets/deny.svg";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import ResetPasswordModal from "./ResetPasswordModal";
-import { ReactComponent as ExcelIcon } from "../../assets/excel.svg"
 import { exportTableToExcel } from "../../utils/export";
-import { ReactComponent as ImpersonateIcon } from "../../assets/impersonate.svg";
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -31,6 +24,12 @@ function UsersPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
   const tableRef = useRef(null);
+
+  const [resetPasswordModal, setResetPasswordModal] = useState({
+    isOpen: false,
+    userId: null,
+    username: ""
+  });
 
   const impersonate = async (userId) => {
     if (!window.confirm("Войти от имени этого пользователя?")) return;
@@ -55,12 +54,6 @@ function UsersPage() {
       exportTableToExcel(tableRef.current, `пользователи_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`);
     }
   };
-
-  const [resetPasswordModal, setResetPasswordModal] = useState({
-    isOpen: false,
-    userId: null,
-    username: ""
-  });
 
   const loadUsers = async () => {
     const res = await fetchWithAuth("/auth/admin/users");
@@ -127,7 +120,7 @@ function UsersPage() {
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditForm(prev => ({ ...prev, [name]: value }));
+    setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const saveEdit = async () => {
@@ -185,8 +178,6 @@ function UsersPage() {
 
   return (
     <div className="container">
-
-
       <ResetPasswordModal
         isOpen={resetPasswordModal.isOpen}
         onClose={closeResetPasswordModal}
@@ -195,25 +186,30 @@ function UsersPage() {
       />
 
       <form onSubmit={createUser}>
-        <div className="users-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div className="page-header" style={{ marginBottom: '24px' }}>
           <h2 className="page-title" style={{ marginBottom: 0 }}>Пользователи</h2>
-          <ActionButton type="excel" tip="Экспорт в эксель" onClick={handleExport}><ExcelIcon /></ActionButton>
+          <div className="header-actions">
+            <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
+              <span className="material-symbols-outlined">table_view</span>
+            </ActionButton>
+          </div>
         </div>
+
         <table ref={tableRef} className="table">
           <thead>
             <tr>
-              <th style={{ width: 30 }}>ID</th>
+              <th style={{ width: '60px' }}>ID</th>
               <th>Логин</th>
               <th>Имя</th>
               <th>Фамилия</th>
               <th>Почта</th>
-              <th style={{ width: 80 }}>Пароль</th>
-              <th style={{ width: 120 }}>Тип аккаунта</th>
-              <th colSpan="3">Действия</th>
+              <th style={{ width: '120px' }}>Пароль</th>
+              <th style={{ width: '160px' }}>Тип аккаунта</th>
+              <th style={{ width: '180px' }}>Действия</th>
             </tr>
           </thead>
           <tbody>
-            {users.map(u => (
+            {users.map((u) =>
               u.id === editingId ? (
                 <tr key={u.id}>
                   <td>{u.id}</td>
@@ -234,10 +230,10 @@ function UsersPage() {
                       <option value="supplier">Поставщик</option>
                     </select>
                   </td>
-                  <td colSpan="3">
+                  <td>
                     <div className="edit-actions">
-                      <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><ApplyIcon /></ActionButton>
-                      <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><DenyIcon /></ActionButton>
+                      <ActionButton type="apply" onClick={saveEdit} tip="Сохранить"><span className="material-symbols-outlined">check</span></ActionButton>
+                      <ActionButton type="danger" onClick={cancelEdit} tip="Отменить"><span className="material-symbols-outlined">close</span></ActionButton>
                     </div>
                   </td>
                 </tr>
@@ -249,27 +245,27 @@ function UsersPage() {
                   <td>{u.last_name}</td>
                   <td>{u.email}</td>
                   <td>********</td>
-                  <td>{getRoleLabel(u.role)}</td>
-                  <td colSpan="3">
+                  <td><span className="badge-role">{getRoleLabel(u.role)}</span></td>
+                  <td>
                     <div className="actions-container">
-                      <ActionButton type="danger" onClick={() => deleteUser(u.id)} tip="Удалить"><BinIcon /></ActionButton>
-                      <ActionButton type="neutral" onClick={() => startEdit(u)} tip="Редактировать"><PenIcon /></ActionButton>
-                      <ActionButton type="extra" onClick={() => openResetPasswordModal(u.id, u.username)} tip="Сменить пароль"><LockIcon /></ActionButton>
-                      <ActionButton type="impersonate" tip="Войти как пользователь"onClick={() => impersonate(u.id)}><ImpersonateIcon /></ActionButton>
+                      <ActionButton type="danger" onClick={() => deleteUser(u.id)} tip="Удалить"><span className="material-symbols-outlined">delete</span></ActionButton>
+                      <ActionButton type="neutral" onClick={() => startEdit(u)} tip="Редактировать"><span className="material-symbols-outlined">edit</span></ActionButton>
+                      <ActionButton type="extra" onClick={() => openResetPasswordModal(u.id, u.username)} tip="Сменить пароль"><span className="material-symbols-outlined">lock_reset</span></ActionButton>
+                      <ActionButton type="impersonate" tip="Войти как пользователь" onClick={() => impersonate(u.id)}><span className="material-symbols-outlined">switch_account</span></ActionButton>
                     </div>
                   </td>
                 </tr>
               )
-            ))}
+            )}
             <tr>
               <td></td>
-              <td><input placeholder="Логин" value={username} onChange={e => setUsername(e.target.value)} /></td>
-              <td><input placeholder="Имя" value={firstName} onChange={e => setFirstname(e.target.value)} /></td>
-              <td><input placeholder="Фамилия" value={lastName} onChange={e => setLastname(e.target.value)} /></td>
-              <td><input placeholder="Почта" value={email} onChange={e => setEmail(e.target.value)} /></td>
-              <td><input type="password" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)} /></td>
+              <td><input placeholder="Логин" value={username} onChange={(e) => setUsername(e.target.value)} /></td>
+              <td><input placeholder="Имя" value={firstName} onChange={(e) => setFirstname(e.target.value)} /></td>
+              <td><input placeholder="Фамилия" value={lastName} onChange={(e) => setLastname(e.target.value)} /></td>
+              <td><input placeholder="Почта" value={email} onChange={(e) => setEmail(e.target.value)} /></td>
+              <td><input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: '100%' }} /></td>
               <td>
-                <select name="role" value={role} onChange={e => setRole(e.target.value)} className="table-select">
+                <select name="role" value={role} onChange={(e) => setRole(e.target.value)} className="table-select">
                   <option value="customer">Клиент</option>
                   <option value="admin">Администратор</option>
                   <option value="management">Руководство</option>
@@ -279,7 +275,7 @@ function UsersPage() {
                   <option value="accountant">Бухгалтер</option>
                 </select>
               </td>
-              <td colSpan="3">
+              <td>
                 <button type="submit" className="primary-btn">Добавить</button>
               </td>
             </tr>
