@@ -40,13 +40,15 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener("unauthorized", handleUnauthorized);
   }, []);
 
-  const login = (token, userData) => {
+  const login = (token, refreshToken, userData) => {
     localStorage.setItem("token", token);
+    localStorage.setItem("refreshToken", refreshToken);
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     setUser(null);
   };
 

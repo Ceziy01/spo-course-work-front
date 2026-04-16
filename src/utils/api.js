@@ -1,23 +1,30 @@
 import { API_BASE_URL } from "../config";
+import { refreshAccessToken } from "./tokenRefresh";
 
 export async function fetchWithAuth(endpoint, options = {}) {
   const token = localStorage.getItem("token");
   
-  const headers = {
-    "Content-Type": "application/json",
-    ...options.headers,
-    Authorization: `Bearer ${token}`
+  const makeRequest = (accessToken) => {
+    const headers = {
+      "Content-Type": "application/json",
+      ...options.headers,
+      Authorization: `Bearer ${accessToken}`
+    };
+    return fetch(`${API_BASE_URL}${endpoint}`, { ...options, headers });
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers
-  });
+  let response = await makeRequest(token);
 
   if (response.status === 401) {
-    localStorage.removeItem("token");
-    window.dispatchEvent(new CustomEvent("unauthorized"));
-    throw new Error("Session expired");
+    try {
+      const newToken = await refreshAccessToken();
+      response = await makeRequest(newToken);
+    } catch (error) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      window.dispatchEvent(new CustomEvent("unauthorized"));
+      throw new Error("Session expired");
+    }
   }
 
   return response;
