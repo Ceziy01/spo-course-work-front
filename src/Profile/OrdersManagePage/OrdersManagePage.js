@@ -7,7 +7,9 @@ import "../../styles/shared.css";
 const statusMap = {
   created: "Создан",
   confirmed: "Подтверждён",
-  cancelled: "Отменён"
+  cancelled: "Отменён",
+  on_the_way: "В пути",
+  delivered: "Доставлен"
 };
 
 function OrdersManagePage({ readOnly = false }) {
@@ -101,6 +103,8 @@ function OrdersManagePage({ readOnly = false }) {
                                         <option value="created">Создан</option>
                                         <option value="confirmed">Подтверждён</option>
                                         <option value="cancelled">Отменён</option>
+                                        <option value="on_the_way">В пути</option>
+                                        <option value="delivered">Доставлен</option>
                                     </select>
                                     <ActionButton
                                         type="danger"

@@ -145,9 +145,9 @@ function Sidebar() {
       <div className="sidebar-footer">
         <button className="theme-toggle-btn" onClick={toggleTheme}>
           <span className="material-symbols-outlined">
-            {theme === "light" ? "dark_mode" : "light_mode"}
+            {theme === "light" ? "light_mode" : "dark_mode"}
           </span>
-          {theme === "light" ? "Тёмная тема" : "Светлая тема"}
+          {theme === "light" ? "Светлая тема" : "Тёмная тема"}
         </button>
         <button onClick={handleLogout} className="logout-sidebar-btn">
           <span className="material-symbols-outlined">logout</span>

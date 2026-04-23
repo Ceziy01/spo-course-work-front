@@ -64,6 +64,19 @@ function PurchasesPage() {
         }
     };
 
+    const handleCancelClick = async (id) => {
+        if (!window.confirm("Вы точно хотите отменить закупку?")) return;
+        setUpdating(prev => ({ ...prev, [id]: true }));
+        const res = await fetchWithAuth(`/purchases/${id}/status?status=cancelled`, { method: "PATCH" });
+        setUpdating(prev => ({ ...prev, [id]: false }));
+        if (res.ok) {
+            loadPurchases();
+        } else {
+            //const err = await res.json();
+            alert("Ошибка изменения статуса");
+        }
+    }
+
     const handleCompleteClick = (purchase) => {
         setSelectedPurchase(purchase);
         setCompleteModalOpen(true);
@@ -85,13 +98,15 @@ function PurchasesPage() {
     const statusColors = {
         created: "var(--text-secondary)",
         initiated: "#fd7e14",
-        completed: "#28a745"
+        completed: "#28a745",
+        cancelled: "red"
     };
 
     const statusLabels = {
         created: "Создана",
         initiated: "Инициирована",
-        completed: "Завершена"
+        completed: "Завершена",
+        cancelled: "Отменено"
     };
 
     if (loading) return <div className="loading">Загрузка...</div>;
@@ -137,18 +152,23 @@ function PurchasesPage() {
                             <td>
                                 <div className="actions-container">
                                     {canEdit && p.status === "created" && (
-                                        <ActionButton type="danger" onClick={() => handleDelete(p.id)} tip="Удалить" disabled={updating[p.id]}>
-                                            <span className="material-symbols-outlined">delete</span>
+                                        <ActionButton type="neutral" onClick={() => handleInitiate(p.id)} tip="Инициировать" disabled={updating[p.id]}>
+                                            <span className="material-symbols-outlined">play_arrow</span>
                                         </ActionButton>
                                     )}
                                     {canEdit && p.status === "created" && (
-                                        <ActionButton type="neutral" onClick={() => handleInitiate(p.id)} tip="Инициировать" disabled={updating[p.id]}>
-                                            <span className="material-symbols-outlined">play_arrow</span>
+                                        <ActionButton type="danger" onClick={() => handleDelete(p.id)} tip="Удалить" disabled={updating[p.id]}>
+                                            <span className="material-symbols-outlined">delete</span>
                                         </ActionButton>
                                     )}
                                     {canComplete && p.status === "initiated" && (
                                         <ActionButton type="apply" onClick={() => handleCompleteClick(p)} tip="Завершить" disabled={updating[p.id]}>
                                             <span className="material-symbols-outlined">check</span>
+                                        </ActionButton>
+                                    )}
+                                    {canComplete && p.status === "initiated" && (
+                                        <ActionButton type="danger" onClick={() => handleCancelClick(p.id)} tip="Отменить" disabled={updating[p.id]}>
+                                            <span className="material-symbols-outlined">close</span>
                                         </ActionButton>
                                     )}
                                 </div>

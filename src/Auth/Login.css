@@ -104,3 +104,26 @@
   background: var(--primary-hover);
   box-shadow: var(--shadow-md);
 }
+
+.theme-toggle-btnn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: var(--card-bg);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  transition: transform 0.2s;
+}
+
+.theme-toggle-btnn:hover {
+  transform: scale(1.07);
+}

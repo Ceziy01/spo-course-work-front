@@ -7,7 +7,9 @@ import "../../styles/shared.css";
 const statusMap = {
   created: "Создан",
   confirmed: "Подтверждён",
-  cancelled: "Отменён"
+  cancelled: "Отменён",
+  on_the_way: "В пути",
+  delivered: "Доставлен"
 };
 
 function MyOrdersPage() {

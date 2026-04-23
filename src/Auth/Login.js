@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
+import { useTheme } from "../hooks/useTheme";
 import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -37,6 +39,11 @@ function Login() {
 
   return (
     <div className="login-page">
+      <button className="theme-toggle-btnn" onClick={toggleTheme}>
+        <span className="material-symbols-outlined">
+          {theme === "light" ? "light_mode" : "dark_mode"}
+        </span>
+      </button>
       <div className="login-card">
         <h2 className="title">Вход в систему</h2>
         <form onSubmit={handleSubmit}>

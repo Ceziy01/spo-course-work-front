@@ -54,7 +54,7 @@ function ClientsPage() {
         <tbody>
           {clients.map((client, index) => (
             <tr key={index}>
-              <td>{index + 1}</td>
+              <td>{client.id}</td>
               <td>{client.username}</td>
               <td>{client.first_name || "—"}</td>
               <td>{client.last_name || "—"}</td>
