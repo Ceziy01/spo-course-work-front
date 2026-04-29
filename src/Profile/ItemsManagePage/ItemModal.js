@@ -83,7 +83,6 @@ function ItemModal({ item, onClose, onSave }) {
     }
 
     const data = await res.json();
-
     setForm(prev => ({
       ...prev,
       image_url: data.image_url
@@ -136,37 +135,92 @@ function ItemModal({ item, onClose, onSave }) {
 
         <form onSubmit={handleSubmit}>
           <div className="form-row">
-            <input name="article" placeholder="Артикул *" value={form.article} onChange={handleChange} required />
-            <input name="name" placeholder="Название *" value={form.name} onChange={handleChange} required />
+            <div className="input-group">
+              <label>Артикул *</label>
+              <input name="article" placeholder="Артикул" value={form.article} onChange={handleChange} required />
+            </div>
+            <div className="input-group">
+              <label>Название *</label>
+              <input name="name" placeholder="Название" value={form.name} onChange={handleChange} required />
+            </div>
           </div>
 
           <div className="form-row">
-            <textarea name="description" placeholder="Описание" value={form.description} onChange={handleChange} />
+            <div className="input-group">
+              <label>Описание</label>
+              <textarea name="description" placeholder="Описание" value={form.description} onChange={handleChange} />
+            </div>
           </div>
 
           <div className="form-row">
-            <select name="category_id" value={form.category_id} onChange={handleChange} required>
-              <option value="">Категория *</option>
-              {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
+            <div className="input-group">
+              <label>Категория *</label>
+              <select name="category_id" value={form.category_id} onChange={handleChange} required>
+                <option value="">Выберите категорию</option>
+                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
 
-            <select name="warehouse_id" value={form.warehouse_id} onChange={handleChange} required>
-              <option value="">Склад *</option>
-              {warehouses.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
-            </select>
+            <div className="input-group">
+              <label>Склад *</label>
+              <select name="warehouse_id" value={form.warehouse_id} onChange={handleChange} required>
+                <option value="">Выберите склад</option>
+                {warehouses.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
+              </select>
+            </div>
           </div>
 
           <div className="form-row">
-            <input type="number" name="quantity" value={form.quantity} onChange={handleChange} />
-            <input name="unit" value={form.unit} onChange={handleChange} />
+            <div className="input-group">
+              <label>Количество</label>
+              <input
+                type="number"
+                name="quantity"
+                placeholder="0"
+                value={form.quantity}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="input-group">
+              <label>Единица измерения</label>
+              <input
+                name="unit"
+                placeholder="шт"
+                value={form.unit}
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
           <div className="form-row">
-            <input type="number" name="price" value={form.price} onChange={handleChange} />
-            <input type="number" name="shelf_life_days" value={form.shelf_life_days} onChange={handleChange} />
+            <div className="input-group">
+              <label>Цена (₽)</label>
+              <input
+                type="number"
+                name="price"
+                placeholder="0"
+                value={form.price}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="input-group">
+              <label>Срок годности (дни)</label>
+              <input
+                type="number"
+                name="shelf_life_days"
+                placeholder="бессрочно"
+                value={form.shelf_life_days}
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
-          <input type="file" onChange={handleFileUpload} />
+          <div className="form-row">
+            <div className="input-group">
+              <label>Изображение</label>
+              <input type="file" onChange={handleFileUpload} />
+            </div>
+          </div>
 
           {form.image_url && (
             <div style={{ marginTop: "10px" }}>
