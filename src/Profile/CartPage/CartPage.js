@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 import { useCart } from "../../hooks/useCart";
 import { fetchWithAuth } from "../../utils/api";
 import "./CartPage.css";
-import { useNavigate } from "react-router-dom";
+import PageHeader from "../../components/PageHeader/PageHeader";
 
 function CartPage() {
   const { cart, loading, updating, updateQuantity, removeItem, loadCart } = useCart();
@@ -11,12 +14,12 @@ function CartPage() {
     if (!window.confirm("Оформить заказ? Корзина будет очищена.")) return;
     const res = await fetchWithAuth("/cart/checkout", { method: "POST" });
     if (res.ok) {
-      alert("Заказ оформлен!");
+      toast.success("Заказ оформлен!");
       loadCart();
       navigate("/orders");
     } else {
       const error = await res.json();
-      alert(error.detail || "Ошибка оформления");
+      toast.error(error.detail || "Ошибка оформления");
     }
   };
 
@@ -26,7 +29,7 @@ function CartPage() {
 
   return (
     <div className="cart-container">
-      <h2>Корзина</h2>
+      <PageHeader icon="shopping_cart" title="Корзина" />
       {cart.length === 0 ? (
         <p>Корзина пуста</p>
       ) : (

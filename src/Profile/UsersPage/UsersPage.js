@@ -1,4 +1,7 @@
 import { useEffect, useState, useRef } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { fetchWithAuth } from "../../utils/api";
 import { getRoleLabel } from "../../utils/utils";
 import "../../styles/shared.css";
@@ -25,6 +28,8 @@ function UsersPage() {
   const [role, setRole] = useState("customer");
   const tableRef = useRef(null);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [resetPasswordModal, setResetPasswordModal] = useState({
     isOpen: false,
     userId: null,
@@ -41,11 +46,11 @@ function UsersPage() {
         window.location.href = "/info";
       } else {
         const error = await res.json();
-        alert(error.detail || "Ошибка входа");
+        toast.error("Ошибка входа")
       }
     } catch (error) {
       console.error("Impersonate error:", error);
-      alert("Ошибка входа");
+      toast.error("Ошибка входа")
     }
   };
 
@@ -57,7 +62,7 @@ function UsersPage() {
 
   const loadUsers = async () => {
     const res = await fetchWithAuth("/auth/admin/users");
-    if (!res.ok) return alert("Failed to load users");
+    if (!res.ok) return toast.error("Не удалось загрузить пользователей")
     setUsers(await res.json());
   };
 
@@ -68,27 +73,45 @@ function UsersPage() {
   const createUser = async (e) => {
     e.preventDefault();
 
-    const res = await fetchWithAuth("/auth/admin/create-user", {
-      method: "POST",
-      body: JSON.stringify({
-        username,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-        role
-      })
-    });
+    if (!username.trim() || !firstName.trim() || !lastName.trim() || !email.trim() || !password.trim()) {
+      toast.error("Заполните все поля");
+      return;
+    }
 
-    if (!res.ok) return alert("Failed to create user");
+    try {
+      const res = await fetchWithAuth("/auth/admin/create-user", {
+        method: "POST",
+        body: JSON.stringify({
+          username,
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password,
+          role
+        })
+      });
 
-    setUsername("");
-    setFirstname("");
-    setLastname("");
-    setEmail("");
-    setPassword("");
-    setRole("customer");
-    loadUsers();
+      if (!res.ok) {
+        let errorMessage = "Не удалось создать пользователя";
+        try {
+          const errorData = await res.json();
+          if (errorData.detail) errorMessage = errorData.detail;
+        } catch { }
+        toast.error(errorMessage);
+        return;
+      }
+
+      toast.success("Пользователь создан");
+      setUsername("");
+      setFirstname("");
+      setLastname("");
+      setEmail("");
+      setPassword("");
+      setRole("customer");
+      loadUsers();
+    } catch (error) {
+      toast.error("логин или почта уже заняты");
+    }
   };
 
   const deleteUser = async (id) => {
@@ -98,8 +121,7 @@ function UsersPage() {
       method: "DELETE"
     });
 
-    if (!res.ok) return alert("Failed to delete user");
-
+    if (!res.ok) return toast.error("Не удалось удалить пользователя");
     loadUsers();
   };
 
@@ -125,7 +147,7 @@ function UsersPage() {
 
   const saveEdit = async () => {
     if (!editForm.username.trim() || !editForm.first_name.trim() || !editForm.last_name.trim() || !editForm.email.trim()) {
-      alert("Все поля (кроме пароля) обязательны");
+      toast.error("Все поля обязательны");
       return;
     }
 
@@ -136,11 +158,12 @@ function UsersPage() {
 
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Failed to update user");
+      toast.error("Не удалось обновить пользователя")
       return;
     }
 
     cancelEdit();
+    toast.success("Пользователь изменён")
     loadUsers();
   };
 
@@ -168,13 +191,30 @@ function UsersPage() {
 
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Failed to reset password");
+      toast.error("Не удалось сменить пароль")
       return;
     }
 
-    alert("Пароль успешно сброшен");
+    toast.success("Пароль успешно сброшен")
     closeResetPasswordModal();
   };
+
+  const filteredUsers = users.filter(u => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    return (
+      (u.username && u.username.toLowerCase().includes(query)) ||
+      (u.first_name && u.first_name.toLowerCase().includes(query)) ||
+      (u.last_name && u.last_name.toLowerCase().includes(query)) ||
+      (u.email && u.email.toLowerCase().includes(query)) ||
+      (getRoleLabel(u.role).toLowerCase().includes(query))
+    );
+  });
+
+  const editingUser = editingId ? users.find(u => u.id === editingId) : null;
+  const finalFilteredUsers = editingUser && !filteredUsers.some(u => u.id === editingUser.id)
+    ? [editingUser, ...filteredUsers]
+    : filteredUsers;
 
   return (
     <div className="container">
@@ -187,11 +227,28 @@ function UsersPage() {
 
       <form onSubmit={createUser}>
         <div className="page-header" style={{ marginBottom: '24px' }}>
-          <h2 className="page-title" style={{ marginBottom: 0 }}>Пользователи</h2>
+          <PageHeader icon="group" title="Управление пользователями" />
           <div className="header-actions">
             <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
               <span className="material-symbols-outlined">table_view</span>
             </ActionButton>
+          </div>
+        </div>
+
+        <div className="search-section" style={{ marginBottom: '16px' }}>
+          <div className="search-wrapper">
+            <input
+              type="text"
+              placeholder="Поиск"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="search-clear">
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>close</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -209,7 +266,7 @@ function UsersPage() {
             </tr>
           </thead>
           <tbody>
-            {users.map((u) =>
+            {finalFilteredUsers.map((u) =>
               u.id === editingId ? (
                 <tr key={u.id}>
                   <td>{u.id}</td>

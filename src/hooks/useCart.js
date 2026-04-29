@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+
 import { fetchWithAuth } from "../utils/api";
 
 export function useCart() {
@@ -13,7 +15,7 @@ export function useCart() {
       const data = await res.json();
       setCart(data);
     } else {
-      alert("Ошибка загрузки корзины");
+      toast.error("Ошибка загрузки корзины");
     }
     setLoading(false);
   };
@@ -33,7 +35,7 @@ export function useCart() {
       loadCart();
     } else {
       const error = await res.json();
-      alert(error.detail || "Ошибка обновления");
+      toast.error(error.detail || "Ошибка обновления");
     }
   };
 
@@ -45,7 +47,7 @@ export function useCart() {
       loadCart();
     } else {
       const error = await res.json();
-      alert(error.detail || "Ошибка удаления");
+      toast.error(error.detail || "Ошибка удаления");
     }
   };
 
@@ -60,7 +62,7 @@ export function useCart() {
       loadCart();
     } else {
       const error = await res.json();
-      alert(error.detail || "Ошибка добавления в корзину");
+      toast.error(error.detail || "Ошибка добавления в корзину");
     }
   };
 

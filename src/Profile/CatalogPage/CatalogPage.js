@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { fetchWithAuth } from "../../utils/api";
 import "./CatalogPage.css";
 import { API_BASE_URL } from "../../config";
@@ -17,11 +20,11 @@ function CatalogPage() {
             if (res.ok) {
                 setItems(await res.json());
             } else {
-                alert("Ошибка загрузки товаров");
+                toast.error("Ошибка загрузки товаров");
             }
         } catch (error) {
             console.error("Ошибка загрузки:", error);
-            alert("Ошибка загрузки товаров");
+            toast.error("Ошибка загрузки товаров");
         } finally {
             setSearching(false);
         }
@@ -54,14 +57,14 @@ function CatalogPage() {
         try {
             const res = await fetchWithAuth(`/items/search/${encodeURIComponent(searchQuery)}`);
             if (!res.ok) {
-                alert("Ошибка поиска");
+                toast.error("Ошибка поиска");
                 return;
             }
             const data = await res.json();
             setItems(data);
         } catch (error) {
             console.error("Ошибка поиска:", error);
-            alert("Ошибка поиска");
+            toast.error("Ошибка поиска");
         } finally {
             setSearching(false);
         }
@@ -83,11 +86,11 @@ function CatalogPage() {
                 await loadCart();
             } else {
                 const error = await res.json();
-                alert(error.detail || "Ошибка добавления в корзину");
+                toast.error(error.detail || "Ошибка добавления в корзину");
             }
         } catch (error) {
             console.error("Ошибка добавления:", error);
-            alert("Ошибка добавления в корзину");
+            toast.error("Ошибка добавления в корзину");
         } finally {
             setAdding(prev => ({ ...prev, [itemId]: false }));
         }
@@ -105,11 +108,11 @@ function CatalogPage() {
                     });
                 } else {
                     const error = await res.json();
-                    alert(error.detail || "Ошибка удаления");
+                    toast.error(error.detail || "Ошибка удаления");
                 }
             } catch (error) {
                 console.error("Ошибка удаления:", error);
-                alert("Ошибка удаления");
+                toast.error("Ошибка удаления");
             }
             return;
         }
@@ -132,11 +135,11 @@ function CatalogPage() {
                 });
             } else {
                 const error = await res.json();
-                alert(error.detail || "Ошибка обновления количества");
+                toast.error(error.detail || "Ошибка обновления количества");
             }
         } catch (error) {
             console.error("Ошибка обновления:", error);
-            alert("Ошибка обновления количества");
+            toast.error("Ошибка обновления количества");
         }
     };
 
@@ -148,7 +151,7 @@ function CatalogPage() {
     return (
         <div className="catalog-container">
             <div className="catalog-header">
-                <h2>Каталог товаров</h2>
+                <PageHeader icon="storefront" title="Каталог товаров" />
                 <div className="search-section">
                     <div className="search-wrapper">
                         <input

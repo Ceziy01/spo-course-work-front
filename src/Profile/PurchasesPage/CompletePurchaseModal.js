@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
 import { fetchWithAuth } from "../../utils/api";
 import { API_BASE_URL } from "../../config";
 
@@ -39,7 +41,7 @@ function CompletePurchaseModal({ purchase, onClose, onSave }) {
     });
 
     if (!res.ok) {
-      alert("Ошибка загрузки картинки");
+      toast.error("Ошибка загрузки картинки");
       return;
     }
 
@@ -50,11 +52,11 @@ function CompletePurchaseModal({ purchase, onClose, onSave }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.article.trim() || !form.unit.trim()) {
-      alert("Заполните обязательные поля (артикул, единица измерения)");
+      toast.error("Заполните обязательные поля (артикул, единица измерения)");
       return;
     }
     if (form.selling_price < 0) {
-      alert("Цена продажи не может быть отрицательной");
+      toast.error("Цена продажи не может быть отрицательной");
       return;
     }
 
@@ -77,7 +79,7 @@ function CompletePurchaseModal({ purchase, onClose, onSave }) {
       onSave();
     } else {
       const err = await res.json();
-      alert(err.detail || "Ошибка завершения закупки");
+      toast.error(err.detail || "Ошибка завершения закупки");
     }
   };
 

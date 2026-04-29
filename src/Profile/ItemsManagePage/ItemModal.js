@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
 import { fetchWithAuth } from "../../utils/api";
 import { API_BASE_URL } from "../../config";
 import "./ItemModal.css";
@@ -76,7 +78,7 @@ function ItemModal({ item, onClose, onSave }) {
     });
 
     if (!res.ok) {
-      alert("Ошибка загрузки картинки");
+      toast.error("Ошибка загрузки картинки");
       return;
     }
 
@@ -92,7 +94,7 @@ function ItemModal({ item, onClose, onSave }) {
     e.preventDefault();
 
     if (!form.name.trim() || !form.article.trim() || !form.category_id || !form.warehouse_id) {
-      alert("Заполните обязательные поля");
+      toast.error("Заполните обязательные поля");
       return;
     }
 
@@ -120,7 +122,7 @@ function ItemModal({ item, onClose, onSave }) {
 
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка");
+      toast.error(error.detail || "Ошибка");
       return;
     }
 

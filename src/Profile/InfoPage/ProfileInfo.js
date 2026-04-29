@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import { getRoleLabel } from "../../utils/utils";
@@ -18,7 +21,7 @@ function ProfileInfo() {
           return res.json();
         })
         .then(setUser)
-        .catch(() => alert("Failed to load profile"));
+        .catch(() => toast.error("Не удалось загрузить профиль"));
     }
   }, [user]);
 
@@ -30,23 +33,19 @@ function ProfileInfo() {
 
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка смены пароля");
+      toast.error("Ошибка смены пароля");
       return;
     }
 
-    alert("Пароль успешно изменён");
+    toast.success("Пароль успешно изменён");
     setModalOpen(false);
   };
-
-  if (!user) return <div className="loading">Загрузка...</div>;
 
   return (
     <div>
       <div className="page-header">
-        <h2 className="page-title">Информация об аккаунте</h2>
-        <button className="primary-btn" onClick={() => setModalOpen(true)}>
-          Сменить пароль
-        </button>
+        <PageHeader icon="account_circle" title="Информация об аккаунте"/>
+        <button className="primary-btn" onClick={() => setModalOpen(true)}>Сменить пароль</button>
       </div>
 
       <div className="profile-info-container">

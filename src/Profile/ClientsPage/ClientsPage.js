@@ -1,4 +1,7 @@
 import { useEffect, useState, useRef } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { fetchWithAuth } from "../../utils/api";
 import { exportTableToExcel } from "../../utils/export";
 import ActionButton from "../../components/ActionButton/ActionButton";
@@ -6,24 +9,34 @@ import "../../styles/shared.css";
 
 function ClientsPage() {
   const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const tableRef = useRef(null);
 
   const loadClients = async () => {
-    setLoading(true);
     const res = await fetchWithAuth("/users/customers");
     if (res.ok) {
       const data = await res.json();
       setClients(data);
     } else {
-      alert("Не удалось загрузить список клиентов");
+      toast.error("Не удалось загрузить список клиентов");
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     loadClients();
   }, []);
+
+  const filteredClients = clients.filter(client => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    return (
+      (client.username && client.username.toLowerCase().includes(query)) ||
+      (client.first_name && client.first_name.toLowerCase().includes(query)) ||
+      (client.last_name && client.last_name.toLowerCase().includes(query)) ||
+      (client.email && client.email.toLowerCase().includes(query))
+    );
+  });
 
   const handleExport = () => {
     if (tableRef.current) {
@@ -31,16 +44,32 @@ function ClientsPage() {
     }
   };
 
-  if (loading) return <div className="loading">Загрузка...</div>;
-
   return (
     <div className="container">
       <div className="page-header">
-        <h2 className="page-title">Клиенты</h2>
+        <PageHeader icon="people" title="Клиенты"/>
         <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
           <span className="material-symbols-outlined">table_view</span>
         </ActionButton>
       </div>
+
+      <div className="search-section" style={{ marginBottom: '16px' }}>
+        <div className="search-wrapper">
+          <input
+            type="text"
+            placeholder="Поиск"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="search-clear">
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>close</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       <table ref={tableRef} className="table">
         <thead>
           <tr>
@@ -52,7 +81,7 @@ function ClientsPage() {
           </tr>
         </thead>
         <tbody>
-          {clients.map((client, index) => (
+          {filteredClients.map((client, index) => (
             <tr key={index}>
               <td>{client.id}</td>
               <td>{client.username}</td>
@@ -61,10 +90,10 @@ function ClientsPage() {
               <td>{client.email || "—"}</td>
             </tr>
           ))}
-          {clients.length === 0 && (
+          {filteredClients.length === 0 && (
             <tr>
               <td colSpan="5" style={{ textAlign: "center", padding: "30px" }}>
-                Нет клиентов
+                Ничего не найдено
               </td>
             </tr>
           )}

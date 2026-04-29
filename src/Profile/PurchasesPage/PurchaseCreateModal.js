@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
 import { fetchWithAuth } from "../../utils/api";
 
 function PurchaseCreateModal({ onClose, onSave }) {
@@ -28,15 +30,15 @@ function PurchaseCreateModal({ onClose, onSave }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.product_name.trim() || !form.supplier_id || !form.warehouse_id) {
-      alert("Заполните все поля");
+      toast.error("Заполните все поля");
       return;
     }
     if (form.quantity < 1) {
-      alert("Количество должно быть не менее 1");
+      toast.error("Количество должно быть не менее 1");
       return;
     }
     if (form.purchase_price < 0) {
-      alert("Цена не может быть отрицательной");
+      toast.error("Цена не может быть отрицательной");
       return;
     }
 
@@ -50,7 +52,7 @@ function PurchaseCreateModal({ onClose, onSave }) {
       onSave();
     } else {
       const err = await res.json();
-      alert(err.detail || "Ошибка создания закупки");
+      toast.error(err.detail || "Ошибка создания закупки");
     }
   };
 

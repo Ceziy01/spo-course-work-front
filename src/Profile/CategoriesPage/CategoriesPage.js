@@ -1,4 +1,7 @@
 import { useEffect, useState, useRef } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import ActionButton from "../../components/ActionButton/ActionButton";
@@ -15,6 +18,9 @@ function CategoriesPage() {
 
   const [newName, setNewName] = useState("");
   const [newDescription, setNewDescription] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState("");
+
   const tableRef = useRef(null);
   
   const handleExport = () => {
@@ -25,7 +31,7 @@ function CategoriesPage() {
 
   const loadCategories = async () => {
     const res = await fetchWithAuth("/categories");
-    if (!res.ok) return alert("Не удалось загрузить категории");
+    if (!res.ok) return toast.error("Не удалось загрузить категории");
     setCategories(await res.json());
   };
 
@@ -33,10 +39,19 @@ function CategoriesPage() {
     loadCategories();
   }, []);
 
+  const filteredCategories = categories.filter(cat => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    return (
+      cat.name.toLowerCase().includes(query) ||
+      (cat.description && cat.description.toLowerCase().includes(query))
+    );
+  });
+
   const createCategory = async (e) => {
     e.preventDefault();
     if (!newName.trim()) {
-      alert("Название категории обязательно");
+      toast.error("Название категории обязательно");
       return;
     }
     const res = await fetchWithAuth("/categories", {
@@ -45,7 +60,7 @@ function CategoriesPage() {
     });
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка создания");
+      toast.error(error.detail || "Ошибка создания");
       return;
     }
     setNewName("");
@@ -58,7 +73,7 @@ function CategoriesPage() {
     const res = await fetchWithAuth(`/categories/${id}`, { method: "DELETE" });
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка удаления");
+      toast.error(error.detail || "Ошибка удаления");
       return;
     }
     loadCategories();
@@ -80,7 +95,7 @@ function CategoriesPage() {
 
   const saveEdit = async () => {
     if (!editForm.name.trim()) {
-      alert("Название обязательно");
+      toast.error("Название обязательно");
       return;
     }
     const res = await fetchWithAuth(`/categories/${editingId}`, {
@@ -92,7 +107,7 @@ function CategoriesPage() {
     });
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка обновления");
+      toast.error(error.detail || "Ошибка обновления");
       return;
     }
     cancelEdit();
@@ -102,10 +117,27 @@ function CategoriesPage() {
   return (
     <div className="container">
       <div className="page-header">
-        <h2 className="page-title">Категории</h2>
+        <PageHeader icon="category" title="Категории" />
         <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
           <span className="material-symbols-outlined">table_view</span>
         </ActionButton>
+      </div>
+
+      <div className="search-section" style={{ marginBottom: '16px' }}>
+        <div className="search-wrapper">
+          <input
+            type="text"
+            placeholder="Поиск"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="search-clear">
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>close</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <table ref={tableRef} className="table">
@@ -118,7 +150,7 @@ function CategoriesPage() {
           </tr>
         </thead>
         <tbody>
-          {categories.map(cat => (
+          {filteredCategories.map(cat => (
             cat.id === editingId ? (
               <tr key={cat.id}>
                 <td>{cat.id}</td>

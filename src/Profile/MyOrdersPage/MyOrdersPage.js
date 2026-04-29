@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { fetchWithAuth } from "../../utils/api";
 import { exportOrdersToExcel } from "../../utils/export";
 import ActionButton from "../../components/ActionButton/ActionButton";
@@ -26,14 +29,14 @@ function MyOrdersPage() {
       const data = await res.json();
       setOrders(data);
     } else {
-      alert("Ошибка загрузки заказов");
+      toast.error("Ошибка загрузки заказов");
     }
     setLoading(false);
   };
 
   const handleExport = () => {
     if (orders.length === 0) {
-      alert("Нет заказов для экспорта");
+      toast.error("Нет заказов для экспорта");
       return;
     }
     exportOrdersToExcel(orders, "мои_заказы");
@@ -44,7 +47,7 @@ function MyOrdersPage() {
   return (
     <div className="container">
       <div className="page-header">
-        <h2 className="page-title" style={{ marginBottom: 0 }}>Мои заказы</h2>
+        <PageHeader icon="receipt_long" title="Мои заказы"/>
         <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
           <span className="material-symbols-outlined">table_view</span>
         </ActionButton>

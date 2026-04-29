@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { fetchWithAuth } from "../../utils/api";
 import { exportOrdersToExcel } from "../../utils/export";
 import ActionButton from "../../components/ActionButton/ActionButton";
@@ -27,7 +30,7 @@ function OrdersManagePage({ readOnly = false }) {
             const data = await res.json();
             setOrders(data);
         } else {
-            alert("Ошибка загрузки заказов");
+            toast.error("Ошибка загрузки заказов");
         }
         setLoading(false);
     };
@@ -41,13 +44,13 @@ function OrdersManagePage({ readOnly = false }) {
             loadOrders();
         } else {
             const error = await res.json();
-            alert(error.detail || "Ошибка удаления заказа");
+            toast.error(error.detail || "Ошибка удаления заказа");
         }
     };
 
     const handleExport = () => {
         if (orders.length === 0) {
-            alert("Нет заказов для экспорта");
+            toast.error("Нет заказов для экспорта");
             return;
         }
         exportOrdersToExcel(orders, "заказы");
@@ -65,7 +68,7 @@ function OrdersManagePage({ readOnly = false }) {
             loadOrders();
         } else {
             const error = await res.json();
-            alert(error.detail || "Ошибка обновления");
+            toast.error(error.detail || "Ошибка обновления");
         }
     };
 
@@ -74,7 +77,7 @@ function OrdersManagePage({ readOnly = false }) {
     return (
         <div className="container">
             <div className="page-header">
-                <h2 className="page-title" style={{ marginBottom: 0 }}>Заказы</h2>
+                <PageHeader icon="assignment" title="Управление заказами"/>
                 <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
                     <span className="material-symbols-outlined">table_view</span>
                 </ActionButton>

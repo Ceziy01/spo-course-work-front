@@ -1,4 +1,6 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
+
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
@@ -14,26 +16,53 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!username.trim() || !password.trim()) {
+      toast.error('Заполните все поля');
+      return;
+    }
+
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password);
 
-    const res = await fetch(`${API_BASE_URL}/auth/token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData.toString()
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData.toString()
+      });
 
-    if (!res.ok) return alert(`Login failed \n code: ${res.status}`);
-    const data = await res.json();
-    const userRes = await fetch(`${API_BASE_URL}/auth/users/me`, {
-      headers: { Authorization: `Bearer ${data.access_token}` }
-    });
+      if (!res.ok) {
+        if (res.status === 429) {
+          return toast.error('Слишком много запросов. Попробуйте позже.');
+        }
 
-    if (userRes.ok) {
-      const userData = await userRes.json();
-      login(data.access_token, data.refresh_token, userData);
-      navigate("/info");
+        if (res.status === 401 || res.status === 400) {
+          return toast.error('Неверный логин или пароль');
+        }
+
+        let errorMessage = `Ошибка входа. Код: ${res.status}`;
+        try {
+          const err = await res.json();
+          if (err.detail) errorMessage = err.detail;
+        } catch { }
+        return toast.error(errorMessage);
+      }
+
+      const data = await res.json();
+      const userRes = await fetch(`${API_BASE_URL}/auth/users/me`, {
+        headers: { Authorization: `Bearer ${data.access_token}` }
+      });
+
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        login(data.access_token, data.refresh_token, userData);
+        navigate("/info");
+      } else {
+        toast.error('Не удалось загрузить профиль пользователя');
+      }
+    } catch (error) {
+      toast.error('Не удалось подключиться к серверу. Проверьте соединение.');
     }
   };
 

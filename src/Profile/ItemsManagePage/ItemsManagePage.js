@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+
 import { useAuth } from "../../Auth/AuthContext";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { fetchWithAuth } from "../../utils/api";
 import { API_BASE_URL } from "../../config";
 import ItemModal from "./ItemModal";
@@ -29,7 +32,7 @@ function ItemsManagePage() {
 
   const loadItems = async () => {
     const res = await fetchWithAuth("/items");
-    if (!res.ok) return alert("Не удалось загрузить товары");
+    if (!res.ok) return toast.error("Не удалось загрузить товары");
     setItems(await res.json());
   };
 
@@ -40,7 +43,7 @@ function ItemsManagePage() {
     }
     const res = await fetchWithAuth(`/items/search/${encodeURIComponent(searchQuery)}`);
     if (!res.ok) {
-      alert("Ошибка поиска");
+      toast.error("Ошибка поиска");
       return;
     }
     const data = await res.json();
@@ -63,7 +66,7 @@ function ItemsManagePage() {
 
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка удаления");
+      toast.error(error.detail || "Ошибка удаления");
       return;
     }
 
@@ -98,7 +101,7 @@ function ItemsManagePage() {
   return (
     <div className="container">
       <div className="items-header">
-        <h2 className="page-title">Товары</h2>
+        <PageHeader icon="inventory_2" title="Товары" />
         <div className="search-section">
           <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
             <span className="material-symbols-outlined">table_view</span>

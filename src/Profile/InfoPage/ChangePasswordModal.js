@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../UsersPage/ResetPasswordModal.css";
+import toast from "react-hot-toast";
 
 function ChangePasswordModal({ isOpen, onClose, onConfirm }) {
   const [oldPassword, setOldPassword] = useState("");
@@ -10,11 +11,11 @@ function ChangePasswordModal({ isOpen, onClose, onConfirm }) {
 
   const handleSubmit = () => {
     if (newPassword.length < 8) {
-      alert("Новый пароль должен быть не менее 8 символов");
+      toast.error("Новый пароль должен быть не менее 8 символов");
       return;
     }
     if (newPassword !== confirmPassword) {
-      alert("Пароли не совпадают");
+      toast.error("Пароли не совпадают");
       return;
     }
     onConfirm(oldPassword, newPassword);

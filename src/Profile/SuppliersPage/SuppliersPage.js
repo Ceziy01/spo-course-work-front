@@ -1,4 +1,7 @@
 import { useEffect, useState, useRef } from "react";
+import toast from "react-hot-toast";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { useAuth } from "../../Auth/AuthContext";
 import { fetchWithAuth } from "../../utils/api";
 import ActionButton from "../../components/ActionButton/ActionButton";
@@ -15,6 +18,9 @@ function SuppliersPage() {
 
   const [newName, setNewName] = useState("");
   const [newAddress, setNewAddress] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState("");
+
   const tableRef = useRef(null);
 
   const handleExport = () => {
@@ -25,7 +31,7 @@ function SuppliersPage() {
 
   const loadSuppliers = async () => {
     const res = await fetchWithAuth("/suppliers");
-    if (!res.ok) return alert("Не удалось загрузить поставщиков");
+    if (!res.ok) return toast.error("Не удалось загрузить поставщиков");
     setSuppliers(await res.json());
   };
 
@@ -33,10 +39,19 @@ function SuppliersPage() {
     loadSuppliers();
   }, []);
 
+  const filteredSuppliers = suppliers.filter(sup => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    return (
+      sup.name.toLowerCase().includes(query) ||
+      sup.address.toLowerCase().includes(query)
+    );
+  });
+
   const createSupplier = async (e) => {
     e.preventDefault();
     if (!newName.trim() || !newAddress.trim()) {
-      alert("Заполните все поля");
+      toast.error("Заполните все поля");
       return;
     }
     const res = await fetchWithAuth("/suppliers", {
@@ -45,7 +60,7 @@ function SuppliersPage() {
     });
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка создания");
+      toast.error(error.detail || "Ошибка создания");
       return;
     }
     setNewName("");
@@ -58,7 +73,7 @@ function SuppliersPage() {
     const res = await fetchWithAuth(`/suppliers/${id}`, { method: "DELETE" });
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка удаления");
+      toast.error(error.detail || "Ошибка удаления");
       return;
     }
     loadSuppliers();
@@ -80,7 +95,7 @@ function SuppliersPage() {
 
   const saveEdit = async () => {
     if (!editForm.name.trim() || !editForm.address.trim()) {
-      alert("Все поля обязательны");
+      toast.error("Все поля обязательны");
       return;
     }
     const res = await fetchWithAuth(`/suppliers/${editingId}`, {
@@ -89,7 +104,7 @@ function SuppliersPage() {
     });
     if (!res.ok) {
       const error = await res.json();
-      alert(error.detail || "Ошибка обновления");
+      toast.error(error.detail || "Ошибка обновления");
       return;
     }
     cancelEdit();
@@ -99,10 +114,27 @@ function SuppliersPage() {
   return (
     <div className="container">
       <div className="page-header">
-        <h2 className="page-title">Поставщики</h2>
+        <PageHeader icon="local_shipping" title="Поставщики"/>
         <ActionButton type="excel" tip="Экспорт в Excel" onClick={handleExport}>
           <span className="material-symbols-outlined">table_view</span>
         </ActionButton>
+      </div>
+
+      <div className="search-section" style={{ marginBottom: '16px' }}>
+        <div className="search-wrapper">
+          <input
+            type="text"
+            placeholder="Поиск"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="search-clear">
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>close</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <table ref={tableRef} className="table">
@@ -115,7 +147,7 @@ function SuppliersPage() {
           </tr>
         </thead>
         <tbody>
-          {suppliers.map(sup => (
+          {filteredSuppliers.map(sup => (
             sup.id === editingId ? (
               <tr key={sup.id}>
                 <td>{sup.id}</td>

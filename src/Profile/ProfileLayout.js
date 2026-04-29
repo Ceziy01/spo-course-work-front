@@ -13,6 +13,7 @@ import CatalogPage from "./CatalogPage/CatalogPage";
 import ClientsPage from "./ClientsPage/ClientsPage";
 import PurchasesPage from "./PurchasesPage/PurchasesPage";
 import Sidebar from "./Sidebar";
+import ActivityLogPage from "./ActivityLogPage/ActivityLogPage";
 import "./ProfileLayout.css";
 
 function ProtectedRoute({ children, allowedRoles = [] }) {
@@ -40,6 +41,7 @@ function ProfileLayout() {
           <Route path="/info" element={<ProfileInfo />} />
 
           {isAdmin && <Route path="/users" element={<UsersPage />} />}
+          {isAdmin && <Route path="/activity-log" element={<ActivityLogPage/>}/>}
 
           <Route
             path="/items"

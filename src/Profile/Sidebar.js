@@ -1,7 +1,10 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 import { useAuth } from "../Auth/AuthContext";
 import { useTheme } from "../hooks/useTheme";
 import "./Sidebar.css";
+import { API_BASE_URL } from "../config";
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -13,6 +16,30 @@ function Sidebar() {
   const isCustomer = user?.role === "customer";
   const canManageOrders = user && ["admin", "sales_manager"].includes(user.role);
   const canViewOrders = user && ["management", "accountant"].includes(user.role);
+
+  const handleBackup = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API_BASE_URL}/auth/admin/backup`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (!res.ok) {
+        let msg = "Ошибка создания бэкапа";
+        try {
+          const err = await res.json();
+          if (err.detail) msg = err.detail;
+        } catch { }
+        toast.error(msg);
+        return;
+      }
+
+      const data = await res.json();
+      toast.success(data.message || "Бэкап успешно создан");
+    } catch (error) {
+      toast.error("Ошибка сети при создании бэкапа");
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -33,13 +60,35 @@ function Sidebar() {
         </NavLink>
 
         {isAdmin && (
-          <NavLink
-            to="/users"
-            className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
-          >
-            <span className="material-symbols-outlined">group</span>
-            Пользователи
-          </NavLink>
+          <>
+            <NavLink
+              to="/users"
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+            >
+              <span className="material-symbols-outlined">group</span>
+              Пользователи
+            </NavLink>
+
+            <NavLink
+              to="/activity-log"
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+            >
+              <span className="material-symbols-outlined">history</span>
+              Журнал действий
+            </NavLink>
+
+            {/* Кнопка бэкапа */}
+            <div
+              className="profile-nav-item"
+              onClick={handleBackup}
+              style={{ cursor: "pointer" }}
+              role="button"
+              tabIndex={0}
+            >
+              <span className="material-symbols-outlined">database</span>
+              Бэкап БД
+            </div>
+          </>
         )}
 
         {isCustomer && (
@@ -57,6 +106,13 @@ function Sidebar() {
             >
               <span className="material-symbols-outlined">shopping_cart</span>
               Корзина
+            </NavLink>
+            <NavLink
+              to="/orders"
+              className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
+            >
+              <span className="material-symbols-outlined">receipt_long</span>
+              Мои заказы
             </NavLink>
           </>
         )}
@@ -108,16 +164,6 @@ function Sidebar() {
           >
             <span className="material-symbols-outlined">shopping_bag</span>
             Закупки
-          </NavLink>
-        )}
-
-        {isCustomer && (
-          <NavLink
-            to="/orders"
-            className={({ isActive }) => `profile-nav-item ${isActive ? "active" : ""}`}
-          >
-            <span className="material-symbols-outlined">receipt_long</span>
-            Мои заказы
           </NavLink>
         )}
 
