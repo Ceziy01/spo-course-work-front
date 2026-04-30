@@ -32,3 +32,9 @@ CMD ["nginx", "-g", "daemon off;"]
 
 # Удалить контейнер
 #docker rm storage-system-front
+
+#=============================
+
+# для сервака
+# docker buildx build --platform linux/arm64 --build-arg REACT_APP_API_URL=http://185.61.77.236:1410 -t storage-system-front:arm64 --load ./
+# docker save -o storage-system-front-arm64.tar storage-system-front:arm64
